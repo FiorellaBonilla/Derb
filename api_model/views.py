@@ -6,3 +6,7 @@ from rest_framework import generics
 def apimodel(request):
 
     return render(request,'home.html')
+
+
+
+
