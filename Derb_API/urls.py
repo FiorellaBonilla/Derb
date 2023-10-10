@@ -16,10 +16,16 @@ Including another URLconf
 
 
 from django.contrib import admin
+from django.http import HttpResponse
 from django.urls import path, include
+from djgentelella.urls import urlpatterns as djgentelellaurls
+from api_model.urls import urlpatterns as url
 
+def home(request):
+    return HttpResponse('OK')
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
+urlpatterns = djgentelellaurls + [
+path('admin/', admin.site.urls),
 path('', include('api_model.urls'))
-]
+
+] + url
