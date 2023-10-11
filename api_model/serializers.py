@@ -1,7 +1,7 @@
 # serializers.py
 
 from rest_framework import serializers
-from .models import ModelTemplate, FormWithQuestions, Response
+from .models import ModelTemplate
 
 
 class ModelTemplateSerializer(serializers.ModelSerializer):
@@ -12,36 +12,9 @@ class ModelTemplateSerializer(serializers.ModelSerializer):
         model = ModelTemplate
         fields = '__all__'
 
-class FormWithQuestionsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = FormWithQuestions
-        fields = '__all__'
 
 
-class ModelTemplateFullSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ModelTemplate
-        fields = '__all__'
 
-class ModelTemplateBasicSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ModelTemplate
-        fields = ['name', 'nameFields']
-
-class ResponseSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Response
-        fields = '__all__'
-
-from rest_framework import serializers
-
-class NameFieldSerializer(serializers.Serializer):
-    type = serializers.CharField()
-    value = serializers.CharField()
-
-class ObjectModelSerializer(serializers.Serializer):
-    description = serializers.CharField()
-    nameFields = NameFieldSerializer(many=True)
 
 
 

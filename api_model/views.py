@@ -3,7 +3,7 @@ from django.shortcuts import  redirect
 from rest_framework import generics
 from rest_framework.response import Response
 
-from api_model.models import FormWithQuestions, ModelTemplate
+from api_model.models import ModelTemplate
 from django.shortcuts import render
 
 from api_model.serializers import ModelTemplateSerializer

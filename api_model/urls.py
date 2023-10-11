@@ -4,11 +4,10 @@ from djgentelella.urls import urlpatterns as djgentelellaurls
 
 from api_model import views
 from api_model.views import apimodel
-from api_model.viewset import ModelTemplateViewSet, FormWithQuestionsViewSet, GetModelInfoView
+from api_model.viewset import ModelTemplateViewSet, GetModelInfoView
 
 router = DefaultRouter()
 router.register(r'models', ModelTemplateViewSet),
-router.register(r'formwithquestions', FormWithQuestionsViewSet),
 
 
 

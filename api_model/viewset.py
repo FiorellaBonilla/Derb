@@ -6,35 +6,15 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authentication import BasicAuthentication
 
-from api_model.models import ModelTemplate, FormWithQuestions
-from api_model.serializers import FormWithQuestionsSerializer, ModelTemplateFullSerializer, \
-    ModelTemplateBasicSerializer, ModelTemplateSerializer, ResponseSerializer, ObjectModelSerializer
+from api_model.models import ModelTemplate
+from api_model.serializers import ModelTemplateSerializer
 from rest_framework.permissions import IsAuthenticated
 
 class ModelTemplateViewSet(viewsets.ModelViewSet):
     queryset = ModelTemplate.objects.all()
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
-    serializer_class =  ObjectModelSerializer
-
-    def get_serializer_class(self):
-        if self.action == 'list':
-            return ModelTemplateFullSerializer
-        elif self.action == 'basic_info':
-            return ModelTemplateBasicSerializer
-        return ModelTemplateFullSerializer
-
-    @action(detail=False)
-    def basic_info(self, request):
-        queryset = self.filter_queryset(self.get_queryset())
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
-
-
-class FormWithQuestionsViewSet(viewsets.ModelViewSet):
-    queryset = FormWithQuestions.objects.all()
-    serializer_class = FormWithQuestionsSerializer
+    serializer_class =  ModelTemplateSerializer
 
 class GetModelInfoView(generics.RetrieveAPIView):
     queryset = ModelTemplate.objects.all()
