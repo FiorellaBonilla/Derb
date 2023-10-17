@@ -1,7 +1,7 @@
 # serializers.py
 
 from rest_framework import serializers
-from .models import ModelTemplate
+from api_model.models import ModelTemplate, ResponseM
 
 
 class ModelTemplateSerializer(serializers.ModelSerializer):
@@ -11,6 +11,16 @@ class ModelTemplateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ModelTemplate
         fields = '__all__'
+class ModelTemplateListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ModelTemplate
+        fields = ['id', 'name']
+
+class ResponseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ResponseM
+        fields = ['id', 'model_template', 'field_name', 'response_data']
+
 
 
 

@@ -59,3 +59,24 @@ h2 {
     border: 1px solid #ccc;
     cursor: pointer;
 }
+/* Estilo para el botón de enviar */
+input[type="submit"] {
+    background-color: #007BFF; /* Color de fondo */
+    color: #fff; /* Color del texto */
+    padding: 10px 20px; /* Espaciado interior (alto, ancho) */
+    border: none; /* Borde */
+    border-radius: 5px; /* Radio de borde */
+    cursor: pointer;
+    transition: background-color 0.3s; /* Transición de color de fondo */
+
+    /* Otras propiedades opcionales */
+    /* font-size: 16px; */ /* Tamaño de fuente */
+    /* font-weight: bold; */ /* Peso de la fuente */
+    /* text-transform: uppercase; */ /* Texto en mayúsculas */
+    /* text-decoration: none; */ /* Decoración de texto (por ejemplo, quitar el subrayado) */
+}
+
+/* Estilo cuando el cursor está sobre el botón */
+input[type="submit"]:hover {
+    background-color: #0056b3; /* Cambia el color de fondo al pasar el cursor sobre el botón */
+}

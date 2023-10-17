@@ -1,13 +1,11 @@
 
 from rest_framework import viewsets, status, generics
 from rest_framework.authentication import BasicAuthentication
-from rest_framework.decorators import api_view, action
-from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.authentication import BasicAuthentication
+from rest_framework.response import Response
 
-from api_model.models import ModelTemplate
-from api_model.serializers import ModelTemplateSerializer
+from api_model.models import ModelTemplate, ResponseM
+from api_model.serializers import ModelTemplateSerializer, ResponseSerializer
 from rest_framework.permissions import IsAuthenticated
 
 class ModelTemplateViewSet(viewsets.ModelViewSet):
@@ -32,4 +30,13 @@ class GetModelInfoView(generics.RetrieveAPIView):
             return Response({'error': 'Modelo no encontrado'}, status=404)
 
 
+class ResponseViewSet(viewsets.ModelViewSet):
+    queryset = ResponseM.objects.all()
+    serializer_class = ResponseSerializer
 
+    def create(self, request, *args, **kwargs):
+        serializer = ResponseSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
