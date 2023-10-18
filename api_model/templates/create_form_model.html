@@ -1,0 +1,24 @@
+
+
+{% extends 'gentelella/base.html' %}
+{% load static %}
+
+{% block stylesheets %}
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+
+<h1>Crea tu formulario personalizado</h1>
+
+
+<button>Crear</button>
+
+
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/user.js' %}"></script>
+{% endblock %}

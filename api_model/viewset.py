@@ -1,18 +1,17 @@
 
-from rest_framework import viewsets, status, generics
-from rest_framework.authentication import BasicAuthentication
+from rest_framework import viewsets, generics
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.response import Response
 
-from api_model.models import ModelTemplate, ResponseM
-from api_model.serializers import ModelTemplateSerializer, ResponseSerializer
+from api_model.models import ModelTemplate, tinyModel
+from api_model.serializers import ModelTemplateSerializer, tinySerializer
 from rest_framework.permissions import IsAuthenticated
 
 class ModelTemplateViewSet(viewsets.ModelViewSet):
-    queryset = ModelTemplate.objects.all()
-    authentication_classes = [BasicAuthentication]
-    permission_classes = [IsAuthenticated]
-    serializer_class =  ModelTemplateSerializer
+     queryset = ModelTemplate.objects.all()
+     authentication_classes = [BasicAuthentication]
+     permission_classes = [IsAuthenticated]
+     serializer_class =  ModelTemplateSerializer
 
 class GetModelInfoView(generics.RetrieveAPIView):
     queryset = ModelTemplate.objects.all()
@@ -30,13 +29,7 @@ class GetModelInfoView(generics.RetrieveAPIView):
             return Response({'error': 'Modelo no encontrado'}, status=404)
 
 
-class ResponseViewSet(viewsets.ModelViewSet):
-    queryset = ResponseM.objects.all()
-    serializer_class = ResponseSerializer
+class tinyViewset(viewsets.ModelViewSet):
+    queryset = tinyModel.objects.all()
+    serializer_class = tinySerializer
 
-    def create(self, request, *args, **kwargs):
-        serializer = ResponseSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -24,3 +24,7 @@ class ModelFieldsList(generics.ListAPIView):
         name_fields_list = [obj.nameFields for obj in queryset]
         return Response({'nameFields': name_fields_list})
 
+
+
+def form(request):
+    return render(request, 'create_form_model.html')

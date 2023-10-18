@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Detalle del Formulario</title>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Detalle del Formulario</title>
+</head>
+<body>
+    <h1>{{ form.title }}</h1>
+    <p>{{ form.description }}</p>
+
+    <h2>Preguntas:</h2>
+    <ul>
+        {% for question in form.form_questions.all %}
+              <p>cual es su nombre</p>
+        {% endfor %}
+    </ul>
+</body>
+</html>
