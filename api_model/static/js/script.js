@@ -15,15 +15,16 @@ class FormBuilder {
 
         for (const [modelId, editor] of this.tinyEditors) {
             const content = editor.getContent();
-            this.enviarDatosALaAPI(modelId, content);
+            this.SendDataAPI(modelId, content);
         }
     }
 
-    enviarDatosALaAPI(modelId, content) {
+    SendDataAPI(modelId, content) {
         const formData = {
     modelId: modelId,
     text: content
 };
+
     console.log(formData);
         fetch('/api/tiny/', {
             method: 'POST',

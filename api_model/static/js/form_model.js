@@ -39,7 +39,6 @@ function enviarDatosALaAPIRespuestas() {
         const preguntaID = +textarea.getAttribute('data-question-id');
         const respuesta = textarea.value;
 
-        // Crear un objeto para la respuesta actual
         const respuestaActual = {
             "fieldsRes": preguntaID,
             "responseF": respuesta

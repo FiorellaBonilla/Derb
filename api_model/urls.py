@@ -25,4 +25,5 @@ urlpatterns =  [
     path('name_fields/', render_name_fields, name='render_name_fields'),
     path('render_view_model/', render_view_model, name='render_view_model'),
 
+
 ]
