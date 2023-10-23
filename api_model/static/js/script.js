@@ -6,9 +6,9 @@ class FormBuilder {
         this.rightPanel = document.getElementById('right-panel');
         this.tinyEditors = new Map();
         this.sendButton = document.getElementById('send-button');
-        this.customFormContainer = document.getElementById('custom-form-container'); // Agrega un contenedor para los campos personalizados
-        this.registros = []; // Para almacenar los campos personalizados
-        this.textareasContainer = document.getElementById('textareas-container'); // Contenedor de textareas personalizadas
+        this.customFormContainer = document.getElementById('custom-form-container');
+        this.registros = [];
+        this.textareasContainer = document.getElementById('textareas-container');
     }
 
     handleFormSubmit(event) {
@@ -22,7 +22,7 @@ class FormBuilder {
     enviarDatosALaAPI(modelId, content) {
         const formData = {
     modelId: modelId,
-    text: content  // Asegúrate de que el nombre del campo coincida con el modelo Django
+    text: content
 };
     console.log(formData);
         fetch('/api/tiny/', {
@@ -138,17 +138,15 @@ class FormBuilder {
     toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | table | media | link',
     setup: (editor) => {
         editor.on('init', () => {
-            editor.setContent(''); // Inicializa el contenido del editor a un valor por defecto
+            editor.setContent('');
         });
 
         editor.on('change', () => {
-            // Actualiza el contenido del editor al área de texto
             const content = editor.getContent();
-            // Almacena el contenido en la variable adecuada
-            // Puedes usar this.registros o cualquier otra estructura de datos
+
         });
 
-        editor.settings.forced_root_block = ''; // Evita que se agreguen párrafos automáticamente
+        editor.settings.forced_root_block = '';
 
         this.tinyEditors.set(model.id, editor);
     }

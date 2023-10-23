@@ -1,0 +1,25 @@
+{% extends 'gentelella/base.html' %}
+{% load static %}
+
+<title>Drag and Drop Form Builder</title>
+{% block stylesheets %}
+<link href="{% static 'css/stylesM.css' %}" rel="stylesheet">
+{% endblock stylesheets %}
+
+{% block content %}
+    <h1>Resultado</h1>
+    <div id="response_content"></div>
+
+    {% if response_content %}
+    <ul class="response-list">
+        {% for item in response_content %}
+        <li>{{ item.text }}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    {% endif %}
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/render_view.js' %}"></script>
+{% endblock %}
