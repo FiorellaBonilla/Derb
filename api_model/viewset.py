@@ -14,20 +14,7 @@ class ModelTemplateViewSet(viewsets.ModelViewSet):
      permission_classes = [IsAuthenticated]
      serializer_class =  ModelTemplateSerializer
 
-class GetModelInfoView(generics.RetrieveAPIView):
-    queryset = ModelTemplate.objects.all()
-    serializer_class = ModelTemplateSerializer
 
-    def retrieve(self, request, model_id, *args, **kwargs):
-        try:
-            model = ModelTemplate.objects.get(id=model_id)
-            model_data = {
-                'name': model.name,
-                'nameFields': model.nameFields,
-            }
-            return Response(model_data)
-        except ModelTemplate.DoesNotExist:
-            return Response({'error': 'Modelo no encontrado'}, status=404)
 
 
 class tinyViewset(viewsets.ModelViewSet):

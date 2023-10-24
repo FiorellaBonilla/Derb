@@ -2,21 +2,19 @@
 {% load static %}
 
 {% block stylesheets %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link href="{% static 'css/stylesM.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 {% endblock stylesheets %}
 
 {% block content %}
-    <h1>Bienvenidos a la pregunta de información basada en un modelo</h1>
-    <p>Los siguientes botones te llevarán a cada vista:</p>
+    <h1>Welcome to the model-based information question</h1>
+    <p>The following buttons will take you to each view:</p>
 
     <div class="button-container">
-        <a href="{% url 'create' %}" class="custom-button">Crear Formulario</a>
-        <a href="{% url 'render_name_fields' %}" class="custom-button">Llenar formulario</a>
-        <a href="{% url 'render_view_model' %}" class="custom-button">Ver respuestas</a>
-        <!-- Agrega más botones para otras vistas aquí si es necesario -->
+        <a href="{% url 'create' %}" class="custom-button">Create Form</a>
+        <a href="{% url 'render_name_fields' %}" class="custom-button">Fill form</a>
+        <a href="{% url 'render_view_model' %}" class="custom-button">See answers</a>
     </div>
 </div>
 {% endblock %}

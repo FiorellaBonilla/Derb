@@ -4,7 +4,7 @@ from djgentelella.urls import urlpatterns as djgentelellaurls
 
 from api_model import views
 from api_model.views import form, home, api_model_view, render_name_fields, render_view_model
-from api_model.viewset import ModelTemplateViewSet, GetModelInfoView, tinyViewset, FormModelViewset, ModelFieldsViewset, \
+from api_model.viewset import ModelTemplateViewSet, tinyViewset, FormModelViewset, ModelFieldsViewset, \
     ResponseFormViewset
 
 router = DefaultRouter()
@@ -19,7 +19,6 @@ router.register(r'response', ResponseFormViewset),
 urlpatterns =  [
     path('', home, name='home'),
     path('api/', include(router.urls)),
-    path('api/models/get_model_info/<int:model_id>/', GetModelInfoView.as_view(), name='get-model-info'),
     path('create/', form, name='create'),
     path('api_model_view/<int:form_id>/', api_model_view, name='api_model_view'),
     path('name_fields/', render_name_fields, name='render_name_fields'),
