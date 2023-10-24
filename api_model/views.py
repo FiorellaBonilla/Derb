@@ -18,18 +18,18 @@ def api_model_view(request, form_id):
 
     if request.method == 'POST':
         text = request.POST.get('text')
-        nueva_pregunta = tinyModel(
+        new_questionsModels = tinyModel(
             text= text,
 
         )
-        nueva_pregunta.save()
-        form.model_pre.add(nueva_pregunta)
-        preguntas_creadas = [nueva_pregunta]
+        new_questionsModels.save()
+        form.model_pre.add(new_questionsModels)
+        create_questionsModels = [new_questionsModels]
 
     else:
-        preguntas_creadas = form.model_pre.all()
+        create_questionsModels = form.model_pre.all()
 
-    return render(request, 'api_model_view.html', {'form': form, 'preguntas_creadas': preguntas_creadas})
+    return render(request, 'api_model_view.html', {'form': form, 'create_questionsModels': create_questionsModels})
 
 
 @login_required
@@ -59,10 +59,10 @@ def update_form(request, form_id):
         return JsonResponse({'error': 'Método no permitido'}, status=405)
 
 @login_required
-def fetch_form_api(preguntas_creadas):
+def fetch_form_api(create_questionsModels):
     api_url = "/api/form/"
     payload = {
-        "preguntas_creadas": preguntas_creadas
+        "create_questionsModels": create_questionsModels
     }
 
     response = requests.post(api_url, json=payload)
@@ -73,23 +73,23 @@ def fetch_form_api(preguntas_creadas):
     else:
         print("Error al hacer la solicitud a la API de form")
 
-    fetch_form_api(preguntas_creadas)
+    fetch_form_api(create_questionsModels)
 @login_required
 def form(request):
     if request.method == 'POST':
         title = request.POST.get('title')
         description_model = request.POST.get('description_model')
 
-        nuevo_formulario = FormModel(
+        new_formModels = FormModel(
             title=title,
             description_model=description_model
         )
-        nuevo_formulario.save()
+        new_formModels.save()
 
-        return redirect('api_model_view', form_id=nuevo_formulario.id)
-    nuevo_formulario = FormModel()
+        return redirect('api_model_view', form_id=new_formModels.id)
+    new_formModels = FormModel()
 
-    return render(request, 'create_form_model.html',{'nuevo_formulario': nuevo_formulario})
+    return render(request, 'create_form_model.html',{'new_formModels': new_formModels})
 
 
 @login_required
