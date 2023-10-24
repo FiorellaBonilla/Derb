@@ -1,62 +1,62 @@
 const formSubmitButton = document.getElementById('form_submit');
-function cargarPreguntas() {
+function loadQuestions() {
     fetch('/api/modelFields/')
         .then(response => {
             if (!response.ok) {
-                throw new Error('No se pudo cargar la lista de preguntas.');
+                throw new Error('Failed to load the list of questions.');
             }
             return response.json();
         })
         .then(data => {
             const textareasContainer = document.getElementById('textareas-container');
 
-            data.forEach(pregunta => {
-                const preguntaDiv = document.createElement('div');
-                preguntaDiv.className = 'pregunta';
+            data.forEach(question => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
 
-                const tituloPregunta = document.createElement('h3');
-                tituloPregunta.textContent = pregunta.nameFields;
+                const questionTitle = document.createElement('h3');
+                questionTitle.textContent = question.nameFields;
 
                 const textareaElement = document.createElement('textarea');
-                textareaElement.style.width = '100%';
-                textareaElement.style.height = '200px';
+                textareaElement.style.width = '30%';
+                textareaElement.style.height = '30px';
 
-                textareaElement.setAttribute('data-question-id', pregunta.id);
-                preguntaDiv.appendChild(tituloPregunta);
-                preguntaDiv.appendChild(textareaElement);
+                textareaElement.setAttribute('data-question-id', question.id);
+                questionDiv.appendChild(questionTitle);
+                questionDiv.appendChild(textareaElement);
 
-                textareasContainer.appendChild(preguntaDiv);
+                textareasContainer.appendChild(questionDiv);
             });
         })
-        .catch(error => console.error('Error al cargar las preguntas:', error));
+        .catch(error => console.error('Error loading questions:', error));
 }
 
 
-function enviarDatosALaAPIRespuestas() {
+function sendDataToAPIResponses() {
     const textareas = document.querySelectorAll('#textareas-container textarea');
 
     textareas.forEach((textarea) => {
-        const preguntaID = +textarea.getAttribute('data-question-id');
-        const respuesta = textarea.value;
+        const questionID = +textarea.getAttribute('data-question-id');
+        const response = textarea.value;
 
-        const respuestaActual = {
-            "fieldsRes": preguntaID,
-            "responseF": respuesta
+        const currentResponse = {
+            "fieldsRes": questionID,
+            "responseF": response
         };
 
-        // Enviar la respuesta actual a la API
+        // Send the current response to the API
         fetch('/api/response/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(respuestaActual)
+            body: JSON.stringify(currentResponse)
         })
         .then(response => {
             if (response.ok) {
-                console.log('Datos enviados con éxito a la API de respuestas');
+                console.log('Data sent successfully to the responses API');
             } else {
-                throw new Error('Error al enviar los datos a la API de respuestas.');
+                throw new Error('Error sending data to the responses API.');
             }
         })
         .catch(error => console.error(error.message));
@@ -65,7 +65,7 @@ function enviarDatosALaAPIRespuestas() {
 
 formSubmitButton.addEventListener('click', function (event) {
     event.preventDefault();
-    enviarDatosALaAPIRespuestas();
+    sendDataToAPIResponses();
 });
 
-window.addEventListener('load', cargarPreguntas);
+window.addEventListener('load', loadQuestions);

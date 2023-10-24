@@ -1,3 +1,30 @@
+function identifyReferences(content) {
+    const regex = /{{(.*?)\.(.*?)}}/g;
+    const references = [];
+    let match;
+    while ((match = regex.exec(content)) !== null) {
+        const name = match[1]; // Asegúrate de que modelName sea el nombre del modelo en tu API
+        const nameFields = match[2]; // Asegúrate de que fieldName sea el nombre del campo en tu API
+        references.push({ name, nameFields });
+    }
+    return references;
+}
+
+// Función para obtener valores desde la API de respuesta
+function obtenerValoresDesdeAPI(references) {
+    const promises = references.map(reference => {
+        const { modelName, fieldName } = reference;
+        const apiUrl = `/api/response/?fieldsRes=${fieldName}`;
+        return fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                return { referencia: reference, valor: data.responseF };
+            });
+    });
+
+    return Promise.all(promises);
+}
+
 class FormBuilder {
     constructor() {
         this.sidebar = document.getElementById('sidebar');
@@ -11,13 +38,30 @@ class FormBuilder {
         this.textareasContainer = document.getElementById('textareas-container');
     }
 
-    handleFormSubmit(event) {
+  handleFormSubmit(event) {
+    for (const [modelId, editor] of this.tinyEditors) {
+        const content = editor.getContent();
+        const references = identifyReferences(content);
 
-        for (const [modelId, editor] of this.tinyEditors) {
-            const content = editor.getContent();
-            this.SendDataAPI(modelId, content);
-        }
+        obtenerValoresDesdeAPI(references)
+            .then(data => {
+                // Reemplazar las referencias en el contenido con los valores
+                data.forEach(item => {
+                    const { referencia, valor } = item;
+                    const { modelName, fieldName } = referencia;
+                    const referenciaRegex = new RegExp(`{{${modelName}\\.${fieldName}}}`, 'g');
+                    content = content.replace(referenciaRegex, valor);
+                });
+
+                // Guardar el contenido actualizado
+                editor.setContent(content);
+            })
+            .catch(error => console.error('Error al obtener los valores desde la API:', error));
+
+        // Luego, puedes continuar enviando los datos a la API como lo hacías antes
+        this.SendDataAPI(modelId, content);
     }
+}
 
     SendDataAPI(modelId, content) {
         const formData = {

@@ -33,8 +33,9 @@ class ModelFieldsSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ResponseFormSerializer(serializers.ModelSerializer):
-    fieldsRes = serializers.PrimaryKeyRelatedField(queryset=ModelFields.objects.all(),
-                                                 required=True)
+    fieldsRes = serializers.PrimaryKeyRelatedField(queryset=ModelFields.objects.all(), required=True, source='fieldsRes.nameFields')
+    # El atributo source indica que debes tomar el valor del campo 'nameFields' del objeto 'fieldsRes'
+
     class Meta:
         model = ResponseForm
         fields = '__all__'

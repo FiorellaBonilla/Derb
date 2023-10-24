@@ -59,24 +59,160 @@ h2 {
     border: 1px solid #ccc;
     cursor: pointer;
 }
-/* Estilo para el botón de enviar */
-input[type="submit"] {
-    background-color: #007BFF; /* Color de fondo */
-    color: #fff; /* Color del texto */
-    padding: 10px 20px; /* Espaciado interior (alto, ancho) */
-    border: none; /* Borde */
-    border-radius: 5px; /* Radio de borde */
-    cursor: pointer;
-    transition: background-color 0.3s; /* Transición de color de fondo */
 
-    /* Otras propiedades opcionales */
-    /* font-size: 16px; */ /* Tamaño de fuente */
-    /* font-weight: bold; */ /* Peso de la fuente */
-    /* text-transform: uppercase; */ /* Texto en mayúsculas */
-    /* text-decoration: none; */ /* Decoración de texto (por ejemplo, quitar el subrayado) */
+input[type="submit"] {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
 }
 
-/* Estilo cuando el cursor está sobre el botón */
+
 input[type="submit"]:hover {
-    background-color: #0056b3; /* Cambia el color de fondo al pasar el cursor sobre el botón */
+    background-color: #0056b3;
+}
+/* create form*/
+
+.custom-form {
+    margin: 20px auto;
+    max-width: 600px;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.custom-form h1 {
+    text-align: center;
+    margin-bottom: 20px;
+     color: #3498db;
+}
+
+.custom-form label {
+    font-weight: bold;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form-control:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+}
+
+/* Estilos personalizados para el botón */
+.custom-button {
+    display: inline-block;
+    background-color: #3498db;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.custom-button:hover {
+    background-color: #2980b9;
+}
+.custom-button-container {
+    text-align: center;
+}
+
+/* Estilos para el mensaje del usuario */
+.user-message {
+    font-weight: bold;
+}
+
+/* for mo*/
+.custom-button {
+    background-color: #3498db;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.custom-button:hover {
+    background-color: #2980b9;
+}
+
+.form-builder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.form-preview {
+    max-width: 600px;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.user-message {
+    font-weight: bold;
+}
+
+.form-title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #3498db;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form-control:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+}
+
+.custom-button {
+    display: inline-block;
+    background-color: #3498db;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.custom-button:hover {
+    background-color: #2980b9;
+}
+.form-group label {
+    display: inline-block;
+    width: 30%;
+    text-align: left;
+    font-weight: bold;
+    padding-right: 10px;
+    margin-top: 10px;
 }

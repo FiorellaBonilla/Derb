@@ -32,17 +32,25 @@ class GetModelInfoView(generics.RetrieveAPIView):
 
 class tinyViewset(viewsets.ModelViewSet):
     queryset = tinyModel.objects.all()
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = tinySerializer
 
 class FormModelViewset(viewsets.ModelViewSet):
     queryset = FormModel.objects.all()
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = formModelSerializer
 
 
 class ModelFieldsViewset(viewsets.ModelViewSet):
     queryset = ModelFields.objects.all()
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = ModelFieldsSerializer
 
 class ResponseFormViewset(viewsets.ModelViewSet):
     queryset = ResponseForm.objects.all()
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = ResponseFormSerializer

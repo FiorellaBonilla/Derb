@@ -1,7 +1,7 @@
 fetch('/api/tiny/')
   .then(response => {
     if (!response.ok) {
-      throw new Error(`Error en la solicitud: ${response.status} - ${response.statusText}`);
+      throw new Error(`Request Error: ${response.status} - ${response.statusText}`);
     }
     return response.json();
   })
@@ -14,12 +14,12 @@ fetch('/api/tiny/')
 
       data.forEach(item => {
         const li = document.createElement('li');
-        li.textContent = `Información ingresada en Tiny: ${item.text}`;
+        li.textContent = `Information entered in Tiny: ${item.text}`;
         ul.appendChild(li);
       });
       responseContent.appendChild(ul);
     } else {
-      responseContent.innerHTML = 'No se encontró información relacionada.';
+      responseContent.innerHTML = 'No related information found.';
     }
   })
-  .catch(error => console.error('Error en la solicitud:', error));
+  .catch(error => console.error('Request Error:', error));

@@ -13,10 +13,10 @@
     </div>
     <div class="form-preview" id="form-preview" droppable="true">
         <h2>Form</h2>
-        <input type="submit" value="Enviar" id="send-button">
+        <input type="submit" value="Send" id="send-button">
 <form method="post" action="{% url 'render_view_model' %}">
     {% csrf_token %}
-    <input type="submit" value="Mostrar" id="view-button">
+    <input type="submit" value="View" id="view-button">
 </form>
         {% csrf_token %}
     </div>
