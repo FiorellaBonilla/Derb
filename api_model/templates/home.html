@@ -1,3 +1,26 @@
 {% extends 'gentelella/base.html' %}
 {% load static %}
 
+{% block stylesheets %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'css/stylesM.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+{% endblock stylesheets %}
+
+{% block content %}
+    <h1>Bienvenidos a la pregunta de información basada en un modelo</h1>
+    <p>Los siguientes botones te llevarán a cada vista:</p>
+
+    <div class="button-container">
+        <a href="{% url 'create' %}" class="custom-button">Crear Formulario</a>
+        <a href="{% url 'render_name_fields' %}" class="custom-button">Llenar formulario</a>
+        <a href="{% url 'render_view_model' %}" class="custom-button">Ver respuestas</a>
+        <!-- Agrega más botones para otras vistas aquí si es necesario -->
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/form_model.js' %}"></script>
+{% endblock %}

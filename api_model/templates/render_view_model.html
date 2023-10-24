@@ -7,7 +7,16 @@
 {% endblock stylesheets %}
 
 {% block content %}
-    <h1>Resultado</h1>
+    <h1 class="main-title">Resultado</h1>
+    {% if user.is_authenticated %}
+        <div class="user-info">
+            Usuario actual: {{ user.username }}
+        </div>
+    {% else %}
+        <div class="user-info">
+            No has iniciado sesión.
+        </div>
+    {% endif %}
     <div id="response_content"></div>
 
     {% if response_content %}

@@ -3,7 +3,7 @@
 
 <title>Drag and Drop Form Builder</title>
 {% block stylesheets %}
-<link href="{% static 'css/stylesM.css' %}" rel="stylesheet">
+<link href="{% static 'css/styleDragAndDrop.css' %}" rel="stylesheet">
 {% endblock stylesheets %}
 
 {% block content %}
@@ -11,15 +11,14 @@
     <div class="sidebar" id="sidebar">
         <h2>Available Questions</h2>
     </div>
-    <div class="form-preview" id="form-preview" droppable="true">
-        <h2>Form</h2>
-        <input type="submit" value="Send" id="send-button">
-<form method="post" action="{% url 'render_view_model' %}">
-    {% csrf_token %}
-    <input type="submit" value="View" id="view-button">
-</form>
+   <div class="form-preview" id="form-preview" droppable="true">
+    <h2>Form</h2>
+    <form method="post" action="{% url 'render_view_model' %}">
         {% csrf_token %}
-    </div>
+        <input type="submit" value="Send" class="custom-button" id="send-button">
+        <input type="submit" value="View" class="custom-button view-button" id="view-button">
+    </form>
+</div>
     <div class="sidebar" id="right-panel">
         <h2>Available Models</h2>
         <div id="model-details" class="collapse">

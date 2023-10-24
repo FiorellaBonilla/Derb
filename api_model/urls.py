@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 from djgentelella.urls import urlpatterns as djgentelellaurls
 
 from api_model import views
-from api_model.views import form, home, api_model_view, render_name_fields, render_view_model, ResponseFormByField
+from api_model.views import form, home, api_model_view, render_name_fields, render_view_model
 from api_model.viewset import ModelTemplateViewSet, GetModelInfoView, tinyViewset, FormModelViewset, ModelFieldsViewset, \
     ResponseFormViewset
 

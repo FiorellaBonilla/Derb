@@ -1,0 +1,106 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.form-builder {
+    display: flex;
+    align-items: stretch;
+    height: 100vh;
+}
+
+.sidebar {
+    background-color: #f0f0f0;
+    padding: 20px;
+    min-width: 200px;
+}
+
+.draggable {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.form-preview {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+
+h2 {
+    text-align: center;
+}
+
+
+.mce-content-body {
+    color: #333;
+}
+
+
+.tox .tox-toolbar {
+    background-color: #f0f0f0;
+}
+
+.tox .tox-toolbar .tox-tbtn {
+    background-color: #007bff;
+    color: #fff;
+    border: 1px solid #007bff;
+}
+
+.draggable-model {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+input[type="submit"] {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+}
+
+
+input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.custom-button {
+    margin-right: 10px; /* Espacio entre los botones (ajusta según tus preferencias) */
+}
+
+.view-button {
+    float: right; /* Mover el botón "View" a la derecha */
+    margin-left: 10px; /* Espacio entre los botones (ajusta según tus preferencias) */
+}
+
+/*home*/
+/* Estilos para los botones */
+.button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.button-container a {
+    display: inline-block;
+    background-color: #3498db;
+    color: #fff;
+    padding: 10px 20px;
+    text-decoration: none;
+    margin: 10px;
+    border-radius: 4px;
+}
+
+.button-container a:hover {
+    background-color: #2980b9;
+}

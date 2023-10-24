@@ -218,7 +218,7 @@ class FormBuilder {
 }
 
 const modelsApiUrl = '/api/models';
-const modelInfoApiUrl = '/api/models/get_model_info/';
+const modelInfoApiUrl = '/api/modelFields/';
 
 document.addEventListener('DOMContentLoaded', () => {
     const formBuilder = new FormBuilder();

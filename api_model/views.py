@@ -115,14 +115,6 @@ def render_view_model(request):
 
 
 
-@login_required
-class ResponseFormByField(APIView):
-    def get(self, request, nameFields):
-        try:
-            response_form = ResponseForm.objects.get(fieldsRes=nameFields)
-            serializer = ResponseFormSerializer(response_form)
-            return Response(serializer.data)
-        except ResponseForm.DoesNotExist:
-            return Response({'error': 'No se encontró ninguna respuesta para el campo especificado'}, status=status.HTTP_404_NOT_FOUND)
+
 
 
