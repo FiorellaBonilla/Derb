@@ -12,7 +12,6 @@ class FormBuilder {
     }
 
     handleFormSubmit(event) {
-
         for (const [modelId, editor] of this.tinyEditors) {
             const content = editor.getContent();
             this.SendDataAPI(modelId, content);
@@ -21,11 +20,11 @@ class FormBuilder {
 
     SendDataAPI(modelId, content) {
         const formData = {
-    modelId: modelId,
-    text: content
-};
+            modelId: modelId,
+            text: content
+        };
 
-    console.log(formData);
+        console.log(formData);
         fetch('/api/tiny/', {
             method: 'POST',
             headers: {
@@ -126,34 +125,67 @@ class FormBuilder {
             });
     }
 
-   showTinyMCEEditor(model) {
-    if (!this.tinyEditors.has(model.id)) {
-        const formField = document.createElement('div');
-        formField.className = 'form-field';
-        formField.textContent = model.name;
-        this.formPreview.appendChild(formField);
+    showTinyMCEEditor(model) {
+        if (!this.tinyEditors.has(model.id)) {
+            const formField = document.createElement('div');
+            formField.className = 'form-field';
+            formField.textContent = model.name;
+            this.formPreview.appendChild(formField);
 
-        tinymce.init({
-    target: formField,
-    plugins: 'autolink lists media',
-    toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | table | media | link',
-    setup: (editor) => {
-        editor.on('init', () => {
-            editor.setContent('');
+            tinymce.init({
+                target: formField,
+                plugins: 'autolink lists media',
+                toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | table | media | link',
+                setup: (editor) => {
+                    editor.on('init', () => {
+                        editor.setContent('');
+                    });
+
+                    // Agrega el evento 'keyup' para detectar variables y obtener valores
+              editor.on('keyup', (e) => {
+    // Mueve la declaración de 'content' aquí
+    let content = editor.getContent();
+    console.log('Evento keyup activado');
+
+    const variableMatch = content.match(/\{\{([\w.]+)\}\}/g);
+    if (variableMatch) {
+        variableMatch.forEach((variable) => {
+            const cleanVariable = variable.match(/\{\{([\w.]+)\}\}/)[1];
+            console.log('Variable limpiada:', cleanVariable);
+
+            // Divide la variable para obtener el nombre del formulario y el nombre del campo
+            const [formName, fieldName] = cleanVariable.split('.');
+
+            fetch('/api/userresponses/')  // Cambia la URL a tu endpoint de respuestas
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Respuesta de la API:', data);
+
+                    const matchingResponse = data.find(response =>
+                        response.field_name === fieldName && response.form_name === formName
+                    );
+                    console.log('Respuesta coincidente:', matchingResponse);
+
+                    if (matchingResponse) {
+                        const value = matchingResponse.response_text || '';
+                        content = content.replace(variable, value);
+                        editor.setContent(content);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al obtener el valor de la variable desde la base de datos:', error);
+                });
         });
-
-        editor.on('change', () => {
-            const content = editor.getContent();
-
-        });
-
-        editor.settings.forced_root_block = '';
-
-        this.tinyEditors.set(model.id, editor);
     }
 });
+
+                    editor.settings.forced_root_block = '';
+
+                    this.tinyEditors.set(model.id, editor);
+                }
+            });
+        }
     }
-}
 
     fieldAlreadyAdded(fieldName) {
         const fieldListItems = document.querySelectorAll('#model-fields-list li');
