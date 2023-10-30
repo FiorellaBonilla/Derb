@@ -5,7 +5,7 @@ from djgentelella.urls import urlpatterns as djgentelellaurls
 from api_model import views
 from api_model.views import form, home, api_model_view, render_name_fields, render_view_model
 from api_model.viewset import ModelTemplateViewSet, tinyViewset, FormModelViewset, ModelFieldsViewset, \
-    ResponseFormViewset
+    ResponseFormViewset, UserResponseViewset
 
 router = DefaultRouter()
 router.register(r'models', ModelTemplateViewSet),
@@ -13,6 +13,7 @@ router.register(r'tiny', tinyViewset),
 router.register(r'form', FormModelViewset),
 router.register(r'modelFields', ModelFieldsViewset),
 router.register(r'response', ResponseFormViewset),
+router.register(r'userresponses', UserResponseViewset)
 
 
 

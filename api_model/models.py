@@ -43,3 +43,7 @@ class ResponseForm(models.Model):
 
         return self.responseF
 
+class UserResponse(models.Model):
+    response_text = models.TextField(blank=True, null=True)
+    field = models.ForeignKey(ModelFields, on_delete=models.CASCADE)
+    form = models.ForeignKey(FormModel, on_delete=models.CASCADE)

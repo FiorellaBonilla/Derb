@@ -1,7 +1,7 @@
 # serializers.py
 
 from rest_framework import serializers
-from api_model.models import ModelTemplate, tinyModel, FormModel, ModelFields, ResponseForm
+from api_model.models import ModelTemplate, tinyModel, FormModel, ModelFields, ResponseForm, UserResponse
 
 
 class ModelTemplateSerializer(serializers.ModelSerializer):
@@ -38,3 +38,18 @@ class ResponseFormSerializer(serializers.ModelSerializer):
     class Meta:
         model = ResponseForm
         fields = '__all__'
+
+
+class UserResponseSerializer(serializers.ModelSerializer):
+    field_name = serializers.CharField(source='field.nameFields', read_only=True)
+    form_name = serializers.CharField(source='form.title', read_only=True)
+
+    class Meta:
+        model = UserResponse
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['field'] = instance.field.nameFields  # Reemplaza 'field' con el nombre del campo
+        data['form'] = instance.form.title  # Agrega el nombre del formulario
+        return data
