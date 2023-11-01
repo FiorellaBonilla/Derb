@@ -2,127 +2,13 @@ class FormBuilder {
     constructor() {
         this.sidebar = document.getElementById('sidebar');
         this.formPreview = document.getElementById('form-preview');
-        this.modelFields = document.getElementById('model-fields');
-        this.rightPanel = document.getElementById('right-panel');
         this.tinyEditors = new Map();
-        this.sendButton = document.getElementById('send-button');
-        this.customFormContainer = document.getElementById('custom-form-container');
-        this.registros = [];
-        this.textareasContainer = document.getElementById('textareas-container');
+        this.editor = null; // Definimos editor como propiedad de la clase
     }
 
-    handleFormSubmit(event) {
-        for (const [modelId, editor] of this.tinyEditors) {
-            const content = editor.getContent();
-            this.SendDataAPI(modelId, content);
-        }
-    }
-
-    SendDataAPI(modelId, content) {
-        const formData = {
-            modelId: modelId,
-            text: content
-        };
-
-        console.log(formData);
-        fetch('/api/tiny/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        })
-        .then(response => {
-            if (response.ok) {
-                console.log('Datos enviados con éxito a la API');
-            } else {
-                console.error('Error al enviar los datos a la API');
-            }
-        })
-        .catch(error => {
-            console.error('Error al enviar los datos a la API:', error);
-        });
-    }
-
-    async setApiUrls(modelsApiUrl, modelInfoApiUrl) {
-        this.modelsApiUrl = modelsApiUrl;
-        this.modelInfoApiUrl = modelInfoApiUrl;
-        await this.init();
-    }
-
-    async init() {
-        this.sendButton.addEventListener('click', () => {
-            this.handleFormSubmit();
-        });
-        if (!this.modelsApiUrl || !this.modelInfoApiUrl) {
-            throw new Error('API URLs not defined');
-        }
-
-        try {
-            const response = await fetch(this.modelsApiUrl);
-            if (!response.ok) {
-                throw new Error('Error loading models from the API');
-            }
-            const models = await response.json();
-            this.createDraggableElements(models);
-            this.createDraggableModels(models);
-        } catch (error) {
-            console.error(error.message);
-        }
-    }
-
-    createDraggableElements(models) {
-        models.forEach((model) => {
-            const draggableItem = document.createElement('div');
-            draggableItem.className = 'draggable';
-            draggableItem.draggable = true;
-            draggableItem.textContent = model.name;
-
-            draggableItem.addEventListener('dragstart', (e) => {
-                e.dataTransfer.setData('text/plain', JSON.stringify(model));
-                this.showTinyMCEEditor(model);
-            });
-
-            this.sidebar.appendChild(draggableItem);
-        });
-    }
-
-    createDraggableModels(models) {
-        models.forEach((model) => {
-            const draggableItem = document.createElement('div');
-            draggableItem.className = 'draggable-model';
-            draggableItem.textContent = model.name;
-
-            draggableItem.addEventListener('click', () => {
-                this.showModelFields(model);
-                this.showTinyMCEEditor(model);
-            });
-
-            this.rightPanel.appendChild(draggableItem);
-        });
-    }
-
-    showModelFields(model) {
-        const modelId = model.id;
-        const modelInfoUrl = `${this.modelInfoApiUrl}${modelId}/`;
-        fetch(modelInfoUrl)
-            .then(response => response.json())
-            .then(data => {
-                const fieldName = data.nameFields;
-                const modelName = data.name;
-                console.log(`Name of model: ${modelName}`);
-                console.log(`NameFields: ${fieldName}`);
-                const modelFieldsList = document.getElementById('model-fields-list');
-                if (modelFieldsList) {
-                    const fieldListItem = document.createElement('li');
-                    modelFieldsList.appendChild(fieldListItem);
-                    fieldListItem.textContent = fieldName;
-                    $('#model-details').collapse('show');
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching model info:', error);
-            });
+    handleDragStart(event, model) {
+        event.dataTransfer.setData('text/plain', JSON.stringify(model));
+        this.showTinyMCEEditor(model);
     }
 
     showTinyMCEEditor(model) {
@@ -132,7 +18,7 @@ class FormBuilder {
             formField.textContent = model.name;
             this.formPreview.appendChild(formField);
 
-            tinymce.init({
+            this.editor = tinymce.init({
                 target: formField,
                 plugins: 'autolink lists media',
                 toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | table | media | link',
@@ -140,75 +26,42 @@ class FormBuilder {
                     editor.on('init', () => {
                         editor.setContent('');
                     });
-
-                    // Agrega el evento 'keyup' para detectar variables y obtener valores
-              editor.on('keyup', (e) => {
-    // Mueve la declaración de 'content' aquí
-    let content = editor.getContent();
-    console.log('Evento keyup activado');
-
-    const variableMatch = content.match(/\{\{([\w.]+)\}\}/g);
-    if (variableMatch) {
-        variableMatch.forEach((variable) => {
-            const cleanVariable = variable.match(/\{\{([\w.]+)\}\}/)[1];
-            console.log('Variable limpiada:', cleanVariable);
-
-            // Divide la variable para obtener el nombre del formulario y el nombre del campo
-            const [formName, fieldName] = cleanVariable.split('.');
-
-            fetch('/api/userresponses/')  // Cambia la URL a tu endpoint de respuestas
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Respuesta de la API:', data);
-
-                    const matchingResponse = data.find(response =>
-                        response.field_name === fieldName && response.form_name === formName
-                    );
-                    console.log('Respuesta coincidente:', matchingResponse);
-
-                    if (matchingResponse) {
-                        const value = matchingResponse.response_text || '';
-                        content = content.replace(variable, value);
-                        editor.setContent(content);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al obtener el valor de la variable desde la base de datos:', error);
-                });
-        });
-    }
-});
-
-                    editor.settings.forced_root_block = '';
-
-                    this.tinyEditors.set(model.id, editor);
                 }
             });
+
+            this.tinyEditors.set(model.id, this.editor);
         }
     }
 
-    fieldAlreadyAdded(fieldName) {
-        const fieldListItems = document.querySelectorAll('#model-fields-list li');
-        return Array.from(fieldListItems).some(item => item.textContent === fieldName);
-    }
-
-    setupListeners() {
-        this.formPreview.addEventListener('dragover', (e) => {
-            e.preventDefault();
-        });
-
-        this.formPreview.addEventListener('dragleave', () => {
-            if (this.modelFields) {
-                this.modelFields.style.display = 'none';
+    async setupListeners() {
+        try {
+            const response = await fetch('/api/combined_models/');
+            if (!response.ok) {
+                throw new Error('Error loading combined models from the API');
             }
-        });
+            const models = await response.json();
+
+            const availableModels = document.getElementById('available-models');
+
+            models.forEach((model) => {
+                const draggableItem = document.createElement('div');
+                draggableItem.className = 'draggable';
+                draggableItem.draggable = true;
+                draggableItem.textContent = model.name;
+
+                draggableItem.addEventListener('dragstart', (e) => {
+                    this.handleDragStart(e, model);
+                });
+
+                availableModels.appendChild(draggableItem);
+            });
+        } catch (error) {
+            console.error(error.message);
+        }
     }
 }
 
-const modelsApiUrl = '/api/models';
-const modelInfoApiUrl = '/api/models/get_model_info/';
-
 document.addEventListener('DOMContentLoaded', () => {
     const formBuilder = new FormBuilder();
-    formBuilder.setApiUrls(modelsApiUrl, modelInfoApiUrl);
+    formBuilder.setupListeners();
 });
