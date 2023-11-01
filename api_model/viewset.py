@@ -2,10 +2,11 @@
 from rest_framework import viewsets, generics
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from api_model.models import ModelTemplate, tinyModel, FormModel, ModelFields, ResponseForm, UserResponse
 from api_model.serializers import ModelTemplateSerializer, tinySerializer, formModelSerializer, ModelFieldsSerializer, \
-    ResponseFormSerializer, UserResponseSerializer
+    ResponseFormSerializer, UserResponseSerializer, CombinedModelSerializer
 from rest_framework.permissions import IsAuthenticated
 
 class ModelTemplateViewSet(viewsets.ModelViewSet):
@@ -45,3 +46,6 @@ class ResponseFormViewset(viewsets.ModelViewSet):
 class UserResponseViewset(viewsets.ModelViewSet):
     queryset = UserResponse.objects.all()
     serializer_class = UserResponseSerializer
+
+
+#viewset combinado

@@ -24,5 +24,6 @@ urlpatterns =  [
     path('api_model_view/<int:form_id>/', api_model_view, name='api_model_view'),
     path('name_fields/', render_name_fields, name='render_name_fields'),
     path('render_view_model/', render_view_model, name='render_view_model'),
+    path('api/combined_models/', views.CombinedModelList.as_view(), name='combined-model-list'),
 
 ]

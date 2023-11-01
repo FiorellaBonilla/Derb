@@ -7,7 +7,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from api_model.models import ModelTemplate, FormModel, tinyModel, ModelFields, ResponseForm
-from api_model.serializers import ModelTemplateSerializer, ResponseFormSerializer
+from api_model.serializers import ModelTemplateSerializer, ResponseFormSerializer, CombinedModelSerializer
+
 
 @login_required
 def home(request):
@@ -114,7 +115,15 @@ def render_view_model(request):
     return render(request, 'render_view_model.html', context)
 
 
+#combinados
+class CombinedModelList(APIView):
+    def get(self, request):
+        models = [
+            {'name': 'Person'},
+            {'name': 'Room'},
+            {'name': 'Pet'},
+        ]
 
-
+        return Response(models)
 
 

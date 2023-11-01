@@ -1,7 +1,7 @@
 # serializers.py
 
 from rest_framework import serializers
-from api_model.models import ModelTemplate, tinyModel, FormModel, ModelFields, ResponseForm, UserResponse
+from api_model.models import ModelTemplate, tinyModel, FormModel, ModelFields, ResponseForm, UserResponse, Person, Room, Pet
 
 
 class ModelTemplateSerializer(serializers.ModelSerializer):
@@ -53,3 +53,8 @@ class UserResponseSerializer(serializers.ModelSerializer):
         data['field'] = instance.field.nameFields  # Reemplaza 'field' con el nombre del campo
         data['form'] = instance.form.title  # Agrega el nombre del formulario
         return data
+
+
+#example models combinados
+class CombinedModelSerializer(serializers.Serializer):
+    models = serializers.ListField(child=serializers.DictField(child=serializers.CharField()))
