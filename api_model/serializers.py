@@ -58,3 +58,24 @@ class UserResponseSerializer(serializers.ModelSerializer):
 #example models combinados
 class CombinedModelSerializer(serializers.Serializer):
     models = serializers.ListField(child=serializers.DictField(child=serializers.CharField()))
+
+class PersonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Person
+        fields = '__all__'
+
+class RoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Room
+        fields = '__all__'
+
+class PetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pet
+        fields = '__all__'
+
+#ver la info de los modelos
+class CombinedDataSerializer(serializers.Serializer):
+    persons = PersonSerializer(many=True)
+    rooms = RoomSerializer(many=True)
+    pets = PetSerializer(many=True)

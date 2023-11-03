@@ -6,8 +6,10 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from api_model.models import ModelTemplate, FormModel, tinyModel, ModelFields, ResponseForm
-from api_model.serializers import ModelTemplateSerializer, ResponseFormSerializer, CombinedModelSerializer
+from api_model.models import ModelTemplate, FormModel, tinyModel, ModelFields, ResponseForm, Person, Room, Pet, \
+    UserResponse
+from api_model.serializers import ModelTemplateSerializer, ResponseFormSerializer, CombinedModelSerializer, \
+    CombinedDataSerializer, PersonSerializer, RoomSerializer, PetSerializer
 
 
 @login_required
@@ -127,3 +129,52 @@ class CombinedModelList(APIView):
         return Response(models)
 
 
+#ver respuesta de los modelos
+class CombinedDataList(APIView):
+    def get(self, request):
+        response_data = {
+            "models": {
+                "persons": {
+                    "data": [],
+                    "fields": {
+                        "first_name": "string",
+                        "last_name": "string",
+                        "id_number": "string"
+                    }
+                },
+                "rooms": {
+                    "data": [],
+                    "fields": {
+                        "physical_address": "string",
+                        "color": "string",
+                        "occupants_count": "integer"
+                    }
+                },
+                "pets": {
+                    "data": [],
+                    "fields": {
+                        "pet_type": "string",
+                        "color": "string",
+                        "age": "integer"
+                    }
+                }
+            }
+        }
+
+        persons = Person.objects.all()
+        rooms = Room.objects.all()
+        pets = Pet.objects.all()
+
+        # Serializar y agregar los datos de personas
+        person_data = PersonSerializer(persons, many=True).data
+        response_data["models"]["persons"]["data"] = person_data
+
+        # Serializar y agregar los datos de habitaciones
+        room_data = RoomSerializer(rooms, many=True).data
+        response_data["models"]["rooms"]["data"] = room_data
+
+        # Serializar y agregar los datos de mascotas
+        pet_data = PetSerializer(pets, many=True).data
+        response_data["models"]["pets"]["data"] = pet_data
+
+        return Response(response_data)
