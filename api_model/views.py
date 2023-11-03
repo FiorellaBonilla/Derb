@@ -134,8 +134,7 @@ class CombinedDataList(APIView):
     def get(self, request):
         response_data = {
             "models": {
-                "persons": {
-                    "data": [],
+                "person": {
                     "fields": {
                         "first_name": "string",
                         "last_name": "string",
@@ -143,7 +142,6 @@ class CombinedDataList(APIView):
                     }
                 },
                 "rooms": {
-                    "data": [],
                     "fields": {
                         "physical_address": "string",
                         "color": "string",
@@ -151,7 +149,6 @@ class CombinedDataList(APIView):
                     }
                 },
                 "pets": {
-                    "data": [],
                     "fields": {
                         "pet_type": "string",
                         "color": "string",
@@ -160,21 +157,5 @@ class CombinedDataList(APIView):
                 }
             }
         }
-
-        persons = Person.objects.all()
-        rooms = Room.objects.all()
-        pets = Pet.objects.all()
-
-        # Serializar y agregar los datos de personas
-        person_data = PersonSerializer(persons, many=True).data
-        response_data["models"]["persons"]["data"] = person_data
-
-        # Serializar y agregar los datos de habitaciones
-        room_data = RoomSerializer(rooms, many=True).data
-        response_data["models"]["rooms"]["data"] = room_data
-
-        # Serializar y agregar los datos de mascotas
-        pet_data = PetSerializer(pets, many=True).data
-        response_data["models"]["pets"]["data"] = pet_data
 
         return Response(response_data)
