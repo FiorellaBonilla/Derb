@@ -2,12 +2,13 @@ import requests
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.views.generic import DetailView
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from api_model.models import ModelTemplate, FormModel, tinyModel, ModelFields, ResponseForm, Person, Room, Pet, \
-    UserResponse
+    UserResponse, Descriptor
 from api_model.serializers import ModelTemplateSerializer, ResponseFormSerializer, CombinedModelSerializer, \
     CombinedDataSerializer, PersonSerializer, RoomSerializer, PetSerializer
 
@@ -159,3 +160,24 @@ class CombinedDataList(APIView):
         }
 
         return Response(response_data)
+
+from django.shortcuts import render
+from .models import Descriptor
+
+def render_view_model(request, descriptor_id):
+    try:
+        descriptor = Descriptor.objects.get(id=descriptor_id)
+    except Descriptor.DoesNotExist:
+        # Manejo de error si el Descriptor no existe
+        return render(request, 'error_template.html', {'error_message': 'El Descriptor no existe'})
+
+    persons = descriptor.persons.all()
+    rooms = descriptor.rooms.all()
+    pets = descriptor.pets.all()
+
+    return render(request, 'render_view_model.html', {'descriptor': descriptor, 'persons': persons, 'rooms': rooms, 'pets': pets})
+
+class DescriptorDetailView(DetailView):
+    model = Descriptor
+    template_name = 'render_view_model.html'
+    context_object_name = 'descriptor'

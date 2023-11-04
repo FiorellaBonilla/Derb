@@ -1,34 +1,39 @@
 {% extends 'gentelella/base.html' %}
 {% load static %}
 
-<title>Drag and Drop Form Builder</title>
-{% block stylesheets %}
-<link href="{% static 'css/stylesM.css' %}" rel="stylesheet">
-{% endblock stylesheets %}
-
 {% block content %}
     <h1 class="main-title">Resultado</h1>
-    {% if user.is_authenticated %}
-        <div class="user-info">
-            Usuario actual: {{ user.username }}
-        </div>
-    {% else %}
-        <div class="user-info">
-            No has iniciado sesión.
-        </div>
-    {% endif %}
-    <div id="response_content"></div>
 
-    {% if response_content %}
-    <ul class="response-list">
-        {% for item in response_content %}
-        <li>{{ item.text }}</li>
+    <div>
+        <h2>Descriptor: {{ descriptor.name }}</h2>
+        <p>Descripción: {{ descriptor.description }}</p>
+    </div>
+
+    <h2>Personas relacionadas:</h2>
+    <ul>
+        {% for person in descriptor.persons.all %}
+            <li>
+                Nombre: {{ person.first_name }} - apellido: {{ person.last_name }} - ID Number: {{ person.id_number }}
+            </li>
         {% endfor %}
     </ul>
-    {% else %}
-    {% endif %}
-{% endblock %}
 
-{% block js %}
-<script src="{% static 'js/render_view.js' %}"></script>
+    <h2>Habitaciones relacionadas:</h2>
+    <ul>
+        {% for room in descriptor.rooms.all %}
+            <li>
+                Dirección: {{ room.physical_address }} - Color: {{ room.color }} - Ocupantes: {{ room.occupants_count }}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <h2>Mascotas relacionadas:</h2>
+    <ul>
+        {% for pet in descriptor.pets.all %}
+            <li>
+                Tipo: {{ pet.type }} - Color: {{ pet.color }} - Edad: {{ pet.age }} años
+            </li>
+        {% endfor %}
+    </ul>
+</div>
 {% endblock %}

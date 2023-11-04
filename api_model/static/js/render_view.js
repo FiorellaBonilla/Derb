@@ -23,3 +23,20 @@ fetch('/api/tiny/')
     }
   })
   .catch(error => console.error('Request Error:', error));
+async function saveContentToApi(content) {
+    try {
+        const response = await fetch('/api/tiny/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ text: content }), // Envia el contenido al servidor
+        });
+        if (!response.ok) {
+            throw new Error(`Request Error: ${response.status} - ${response.statusText}`);
+        }
+        console.log('Content saved successfully');
+    } catch (error) {
+        console.error('Request Error:', error);
+    }
+}

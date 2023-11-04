@@ -76,6 +76,8 @@ class FormBuilder {
                             });
 
                             editor.setContent(content);
+                                    saveContentToApi(content);
+
                         }
                     });
 
