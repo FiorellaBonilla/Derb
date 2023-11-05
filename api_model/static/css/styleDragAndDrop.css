@@ -76,16 +76,16 @@ input[type="submit"]:hover {
 }
 
 .custom-button {
-    margin-right: 10px; /* Espacio entre los botones (ajusta según tus preferencias) */
+    margin-right: 10px;
 }
 
 .view-button {
-    float: right; /* Mover el botón "View" a la derecha */
-    margin-left: 10px; /* Espacio entre los botones (ajusta según tus preferencias) */
+    float: right;
+    margin-left: 10px;
 }
 
 /*home*/
-/* Estilos para los botones */
+
 .button-container {
     text-align: center;
     margin-top: 20px;

@@ -30,7 +30,7 @@ async function saveContentToApi(content) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ text: content }), // Envia el contenido al servidor
+            body: JSON.stringify({ text: content }), // send content of server
         });
         if (!response.ok) {
             throw new Error(`Request Error: ${response.status} - ${response.statusText}`);

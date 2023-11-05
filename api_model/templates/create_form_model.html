@@ -10,9 +10,9 @@
 <div class="custom-form">
     <h1>Create Form</h1>
     {% if user.is_authenticated %}
-        <p class="user-message">Usuario actual: {{ user.username }}</p>
+        <p class="user-message">Current user: {{ user.username }}</p>
     {% else %}
-        <p class="user-message">No has iniciado sesión.</p>
+        <p class="user-message">You are not logged in.</p>
     {% endif %}
     <form action="" method="post">
         {% csrf_token %}

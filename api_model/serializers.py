@@ -74,7 +74,7 @@ class PetSerializer(serializers.ModelSerializer):
         model = Pet
         fields = '__all__'
 
-#ver la info de los modelos
+#see info to models
 class CombinedDataSerializer(serializers.Serializer):
     persons = PersonSerializer(many=True)
     rooms = RoomSerializer(many=True)

@@ -1,13 +1,18 @@
 {% extends 'gentelella/base.html' %}
 {% load static %}
 
+{% block stylesheets %}
+
+    <link href="{% static 'css/render_view.css' %}" rel="stylesheet">
+{% endblock stylesheets %}
+
 {% block content %}
     <div class="page-title">
         <h1 class="main-title">Result</h1>
     </div>
 
     <h2>Descriptor: {{ descriptor.name }}</h2>
-    <p>Descripción: {{ descriptor.description }}</p>
+    <p>Description: {{ descriptor.description }}</p>
 
     <div class="related-section">
         <h2>Related person:</h2>
@@ -58,35 +63,5 @@
     </div>
 </div>
 
-<style>
-    .page-title {
-        color: #fff;
-        padding: 20px;
-        text-align: center;
-    }
 
-    .related-section {
-        padding: 20px;
-        border: 1px solid #ddd;
-        margin: 10px;
-        border-radius: 10px;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .related-item {
-        list-style: none;
-        margin: 10px 0;
-        display: flex;
-        flex-wrap: wrap;
-    }
-
-    .related-label {
-        font-weight: bold;
-        margin-right: 5px;
-    }
-
-    .related-value {
-        flex: 1;
-    }
-</style>
 {% endblock %}

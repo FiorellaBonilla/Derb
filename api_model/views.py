@@ -1,6 +1,7 @@
 import re
 from re import findall
-
+from django.shortcuts import render
+from .models import Descriptor
 import requests
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -133,7 +134,7 @@ class CombinedModelList(APIView):
         return Response(models)
 
 
-#ver respuesta de los modelos
+#see reponse to models
 class CombinedDataList(APIView):
     def get(self, request):
         response_data = {
@@ -164,14 +165,12 @@ class CombinedDataList(APIView):
 
         return Response(response_data)
 
-from django.shortcuts import render
-from .models import Descriptor
+
 
 def render_view_model(request, descriptor_id):
     try:
         descriptor = Descriptor.objects.get(id=descriptor_id)
     except Descriptor.DoesNotExist:
-        # Manejo de error si el Descriptor no existe
         return render(request, 'error_template.html', {'error_message': 'El Descriptor no existe'})
 
     persons = descriptor.persons.all()
@@ -187,10 +186,9 @@ class DescriptorDetailView(DetailView):
 
 
 def render_principal(request):
-    # Obtén todos los registros de TinyModel
     content_from_tiny = tinyModel.objects.all()
 
-    # Reemplaza las etiquetas {{modelo.campo}} en cada registro
+    # Replace the tags {{model.field}}
     for item in content_from_tiny:
         item.text = replace_content_placeholders(item.text)
 
@@ -201,10 +199,10 @@ def render_principal(request):
     return render(request, 'render_principal.html', context)
 
 def replace_content_placeholders(content):
-    # Encuentra todas las coincidencias de {{modelo.campo}}
+    # Find all matches of {{model.field}}
     matches = findall(r'\{\{(.+?)\}\}', content)
 
-    # Realiza el reemplazo
+    # Perform the replacement
     for match in matches:
         model_field = match.split('.')
         if len(model_field) == 2:
@@ -212,7 +210,6 @@ def replace_content_placeholders(content):
             try:
                 model_instances = get_model_instances(model_name)
                 if model_instances:
-                    # Crea un string con los valores de los campos del modelo
                     field_values = ', '.join([str(getattr(instance, field_name)) for instance in model_instances])
                     content = content.replace(f'{{{{{match}}}}}', field_values)
             except (KeyError, AttributeError):
@@ -222,9 +219,7 @@ def replace_content_placeholders(content):
 
 def get_model_instances(model_name):
     try:
-        # Convierte el nombre del modelo en formato TitleCase
         model_name = model_name.title()
-        # Utiliza el método all() para obtener todas las instancias del modelo
         return globals()[model_name].objects.all()
     except (KeyError, AttributeError):
         return None

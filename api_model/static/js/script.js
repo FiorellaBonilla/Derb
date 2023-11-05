@@ -4,7 +4,7 @@ class FormBuilder {
         this.formPreview = document.getElementById('form-preview');
         this.tinyEditors = new Map();
         this.editor = null;
-        this.apiData = null; // Almacenar los datos de la API
+        this.apiData = null; // Save data into api
     }
 
     async fetchAPIData() {
@@ -43,7 +43,7 @@ class FormBuilder {
                     editor.on('input', async (e) => {
                         let content = editor.getContent();
 
-                        // Buscar todas las coincidencias de {{...}}
+                        // Find all matches of {{...}}
                         const variableMatches = content.match(/\{\{([\w.]+)\}\}/g);
 
                         if (variableMatches) {
@@ -77,13 +77,12 @@ class FormBuilder {
 
                             editor.setContent(content);
                                     saveContentToApi(content);
-const savePopup = document.getElementById('save-popup');
-savePopup.style.display = 'block';
+                                    const savePopup = document.getElementById('save-popup');
+                                        savePopup.style.display = 'block';
 
-// Ocultar la ventana emergente después de un tiempo (por ejemplo, 3 segundos)
-setTimeout(() => {
-    savePopup.style.display = 'none';
-}, 3000); // 3000 milisegundos = 3 segundos
+                            setTimeout(() => {
+                                     savePopup.style.display = 'none';
+                                        }, 3000);
 
                         }
                     });

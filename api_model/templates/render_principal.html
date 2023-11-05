@@ -7,16 +7,16 @@
 {% block content %}
 
     <div class="page-title">
-        <h1 class="main-title">Resultado</h1>
+        <h1 class="main-title">Result</h1>
     </div>
 
     {% if user.is_authenticated %}
         <div class="user-info">
-            Usuario actual: {{ user.username }}
+            Current user: {{ user.username }}
         </div>
     {% else %}
         <div class="user-info">
-            No has iniciado sesión.
+            You are not logged in.
         </div>
     {% endif %}
 
