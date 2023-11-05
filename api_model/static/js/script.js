@@ -77,6 +77,13 @@ class FormBuilder {
 
                             editor.setContent(content);
                                     saveContentToApi(content);
+const savePopup = document.getElementById('save-popup');
+savePopup.style.display = 'block';
+
+// Ocultar la ventana emergente después de un tiempo (por ejemplo, 3 segundos)
+setTimeout(() => {
+    savePopup.style.display = 'none';
+}, 3000); // 3000 milisegundos = 3 segundos
 
                         }
                     });
