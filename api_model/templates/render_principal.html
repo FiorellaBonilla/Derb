@@ -1,0 +1,34 @@
+{% extends 'gentelella/base.html' %}
+{% load static %}
+
+{% block stylesheets %}
+<link href="{% static 'css/render_view.css' %}" rel="stylesheet">
+{% endblock stylesheets %}
+{% block content %}
+
+    <div class="page-title">
+        <h1 class="main-title">Resultado</h1>
+    </div>
+
+    {% if user.is_authenticated %}
+        <div class="user-info">
+            Usuario actual: {{ user.username }}
+        </div>
+    {% else %}
+        <div class="user-info">
+            No has iniciado sesión.
+        </div>
+    {% endif %}
+
+    <div class="response-container">
+        {% for item in content_from_tiny %}
+            <div class="response-item">
+                <div class="response-text">
+                    {{ item.text|safe }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

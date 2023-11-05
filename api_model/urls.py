@@ -26,7 +26,8 @@ urlpatterns =  [
     path('render_view_model/', render_view_model, name='render_view_model'),
     path('api/combined_models/', views.CombinedModelList.as_view(), name='combined-model-list'),
     path('api/combined_data/', views.CombinedDataList.as_view(), name='combined-data-list'),
-    path('render_view_model/<int:descriptor_id>/', views.render_view_model, name='render_view_model'),
+    path('render_principal/', views.render_principal, name='render_principal'),
     path('render_view_model/<int:pk>/', views.DescriptorDetailView.as_view(), name='descriptor-detail'),
+    path('CombinedDataAPI/', views.CombinedDataAPI.as_view(), name='CombinedDataAPI'),
 
 ]

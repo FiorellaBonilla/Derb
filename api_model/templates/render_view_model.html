@@ -2,38 +2,91 @@
 {% load static %}
 
 {% block content %}
-    <h1 class="main-title">Resultado</h1>
-
-    <div>
-        <h2>Descriptor: {{ descriptor.name }}</h2>
-        <p>Descripción: {{ descriptor.description }}</p>
+    <div class="page-title">
+        <h1 class="main-title">Result</h1>
     </div>
 
-    <h2>Personas relacionadas:</h2>
-    <ul>
-        {% for person in descriptor.persons.all %}
-            <li>
-                Nombre: {{ person.first_name }} - apellido: {{ person.last_name }} - ID Number: {{ person.id_number }}
-            </li>
-        {% endfor %}
-    </ul>
+    <h2>Descriptor: {{ descriptor.name }}</h2>
+    <p>Descripción: {{ descriptor.description }}</p>
 
-    <h2>Habitaciones relacionadas:</h2>
-    <ul>
-        {% for room in descriptor.rooms.all %}
-            <li>
-                Dirección: {{ room.physical_address }} - Color: {{ room.color }} - Ocupantes: {{ room.occupants_count }}
-            </li>
-        {% endfor %}
-    </ul>
+    <div class="related-section">
+        <h2>Related person:</h2>
+        <ul>
+            {% for person in descriptor.persons.all %}
+                <li class="related-item">
+                    <span class="related-label">Name:</span>
+                    <span class="related-value">{{ person.first_name }}</span>
+                    <span class="related-label">Last Name:</span>
+                    <span class="related-value">{{ person.last_name }}</span>
+                    <span class="related-label">ID Number:</span>
+                    <span class="related-value">{{ person.id_number }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 
-    <h2>Mascotas relacionadas:</h2>
-    <ul>
-        {% for pet in descriptor.pets.all %}
-            <li>
-                Tipo: {{ pet.type }} - Color: {{ pet.color }} - Edad: {{ pet.age }} años
-            </li>
-        {% endfor %}
-    </ul>
+    <div class="related-section">
+        <h2>Rooms related:</h2>
+        <ul>
+            {% for room in descriptor.rooms.all %}
+                <li class="related-item">
+                    <span class="related-label">Address:</span>
+                    <span class="related-value">{{ room.physical_address }}</span>
+                    <span class="related-label">Color:</span>
+                    <span class="related-value">{{ room.color }}</span>
+                    <span class="related-label">Occupants:</span>
+                    <span class="related-value">{{ room.occupants_count }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="related-section">
+        <h2>Related pets:</h2>
+        <ul>
+            {% for pet in descriptor.pets.all %}
+                <li class="related-item">
+                    <span class="related-label">Type:</span>
+                    <span class="related-value">{{ pet.pet_type }}</span>
+                    <span class="related-label">Color:</span>
+                    <span class="related-value">{{ pet.color }}</span>
+                    <span class="related-label">Age:</span>
+                    <span class="related-value">{{ pet.age }} age</span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 </div>
+
+<style>
+    .page-title {
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .related-section {
+        padding: 20px;
+        border: 1px solid #ddd;
+        margin: 10px;
+        border-radius: 10px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .related-item {
+        list-style: none;
+        margin: 10px 0;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .related-label {
+        font-weight: bold;
+        margin-right: 5px;
+    }
+
+    .related-value {
+        flex: 1;
+    }
+</style>
 {% endblock %}

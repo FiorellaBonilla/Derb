@@ -1,3 +1,6 @@
+import re
+from re import findall
+
 import requests
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -142,14 +145,14 @@ class CombinedDataList(APIView):
                         "id_number": "string"
                     }
                 },
-                "rooms": {
+                "room": {
                     "fields": {
                         "physical_address": "string",
                         "color": "string",
                         "occupants_count": "integer"
                     }
                 },
-                "pets": {
+                "pet": {
                     "fields": {
                         "pet_type": "string",
                         "color": "string",
@@ -181,3 +184,60 @@ class DescriptorDetailView(DetailView):
     model = Descriptor
     template_name = 'render_view_model.html'
     context_object_name = 'descriptor'
+
+
+def render_principal(request):
+    # Obtén todos los registros de TinyModel
+    content_from_tiny = tinyModel.objects.all()
+
+    # Reemplaza las etiquetas {{modelo.campo}} en cada registro
+    for item in content_from_tiny:
+        item.text = replace_content_placeholders(item.text)
+
+    context = {
+        'content_from_tiny': content_from_tiny,
+    }
+
+    return render(request, 'render_principal.html', context)
+
+def replace_content_placeholders(content):
+    # Encuentra todas las coincidencias de {{modelo.campo}}
+    matches = findall(r'\{\{(.+?)\}\}', content)
+
+    # Realiza el reemplazo
+    for match in matches:
+        model_field = match.split('.')
+        if len(model_field) == 2:
+            model_name, field_name = model_field
+            try:
+                model_instances = get_model_instances(model_name)
+                if model_instances:
+                    # Crea un string con los valores de los campos del modelo
+                    field_values = ', '.join([str(getattr(instance, field_name)) for instance in model_instances])
+                    content = content.replace(f'{{{{{match}}}}}', field_values)
+            except (KeyError, AttributeError):
+                pass
+
+    return content
+
+def get_model_instances(model_name):
+    try:
+        # Convierte el nombre del modelo en formato TitleCase
+        model_name = model_name.title()
+        # Utiliza el método all() para obtener todas las instancias del modelo
+        return globals()[model_name].objects.all()
+    except (KeyError, AttributeError):
+        return None
+
+class CombinedDataAPI(APIView):
+    def get(self, request):
+        combined_data = {}
+
+        combined_data['persons'] = list(Person.objects.values())
+        combined_data['room'] = list(Room.objects.values())
+        combined_data['pet'] = list(Pet.objects.values())
+
+        return Response(combined_data)
+
+
+
