@@ -1,12 +1,14 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
+from django.urls import reverse
 from rest_framework import status
 from rest_framework.authtoken.models import Token
-from rest_framework.test import APIClient, APIRequestFactory
+from rest_framework.test import APIClient, APIRequestFactory, APITestCase
 
-from api_model.models import ModelTemplate, ModelFields, tinyModel, FormModel, ResponseForm
+from api_model.models import ModelTemplate, ModelFields, tinyModel, FormModel, ResponseForm, Person, Room, Pet, \
+    Descriptor
 from api_model.serializers import ModelTemplateSerializer, ModelFieldsSerializer, tinySerializer, formModelSerializer, \
-    ResponseFormSerializer
+    ResponseFormSerializer, CombinedModelSerializer
 from api_model.viewset import ModelFieldsViewset
 
 
@@ -369,3 +371,142 @@ class ResponseFormSerializerTestCase(TestCase):
         response_form = serializer.save()
         self.assertEqual(response_form.responseF, "New Response")
         self.assertEqual(response_form.fieldsRes, model_fields)
+
+
+#test of models examples
+#test_create_person: This test checks if you
+# can create a Person instance with certain attributes
+# and then verify that the attributes are stored correctly in the database.
+#test_person_str_method: This test checks if the __str__ method of
+# the Person class is working correctly. The __str__ method defines
+# how a Person instance will be represented as a string.
+#Result:
+#test_create_person: OK
+#test_person_str_method: Ok
+#test_person_unicode_method:OK
+
+class PersonModelTest(TestCase):
+    def test_create_person(self):
+        person = Person.objects.create(
+            first_name="John",
+            last_name="Doe",
+            id_number="1234567890"
+        )
+        self.assertEqual(person.first_name, "John")
+        self.assertEqual(person.last_name, "Doe")
+        self.assertEqual(person.id_number, "1234567890")
+
+    def test_person_str_method(self):
+        person = Person(
+            first_name="Jane",
+            last_name="Smith",
+            id_number="9876543210"
+        )
+        self.assertEqual(str(person), "Jane Smith - ID Number: 9876543210")
+
+    def test_person_unicode_method(self):
+        person = Person(
+            first_name="Alice",
+            last_name="Johnson",
+            id_number="5555555555"
+        )
+        self.assertEqual(str(person), "Alice Johnson - ID Number: 5555555555")
+
+#room
+#The test_create_room test verifies that the Room model
+# can be instantiated with specific values for its
+# fields (physical address, color, and number of occupants)
+# and then verifies that the values are stored correctly in the database.
+#Result:
+#test_create_room: OK
+#test_room_str_method: Ok
+
+
+class RoomModelTest(TestCase):
+    def test_create_room(self):
+        room = Room.objects.create(
+            physical_address="123 Main St",
+            color="Blue",
+            occupants_count=3
+        )
+        self.assertEqual(room.physical_address, "123 Main St")
+        self.assertEqual(room.color, "Blue")
+        self.assertEqual(room.occupants_count, 3)
+
+    def test_room_str_method(self):
+        room = Room(
+            physical_address="456 Elm St",
+            color="Red",
+            occupants_count=2
+        )
+        expected_str = "Address: 456 Elm St - Color: Red - Occupants: 2"
+        self.assertEqual(str(room), expected_str)
+
+#pet
+#The test_create_pet test verifies that the
+# Pet model can be instantiated with specific
+# values for its fields and then verifies that
+# the values are stored correctly in the database
+#Result:
+#test_create_pet: OK
+#test_pet_str_method: OK
+class PetModelTest(TestCase):
+    def test_create_pet(self):
+        pet = Pet.objects.create(
+            pet_type='Dog',
+            color='Brown',
+            age=3
+        )
+        self.assertEqual(pet.pet_type, 'Dog')
+        self.assertEqual(pet.color, 'Brown')
+        self.assertEqual(pet.age, 3)
+
+    def test_pet_str_method(self):
+        pet = Pet(
+            pet_type='Cat',
+            color='Gray',
+            age=2
+        )
+        expected_str = "Type: Cat - Color: Gray - Age: 2 years"
+        self.assertEqual(str(pet), expected_str)
+
+
+#DESCRIPTOR
+#The DescriptorModelTest test
+# is used to verify the behavior of the
+# Descriptor model and its relationships with other models
+#Result:
+#setUp: OK
+#test_create_descriptor: Ok
+#test_descriptor_str_method: OK
+
+class DescriptorModelTest(TestCase):
+    def setUp(self):
+        self.person = Person.objects.create(first_name="John", last_name="Doe", id_number="1234567890")
+        self.room = Room.objects.create(physical_address="123 Main St", color="Blue", occupants_count=2)
+        self.pet = Pet.objects.create(pet_type="Dog", color="Brown", age=3)
+
+    def test_create_descriptor(self):
+        descriptor = Descriptor.objects.create(
+            name="Test Descriptor",
+            description="This is a test descriptor"
+        )
+
+        descriptor.persons.add(self.person)
+        descriptor.rooms.add(self.room)
+        descriptor.pets.add(self.pet)
+
+        self.assertEqual(descriptor.name, "Test Descriptor")
+        self.assertEqual(descriptor.description, "This is a test descriptor")
+        self.assertIn(self.person, descriptor.persons.all())
+        self.assertIn(self.room, descriptor.rooms.all())
+        self.assertIn(self.pet, descriptor.pets.all())
+
+    def test_descriptor_str_method(self):
+        descriptor = Descriptor(name="Sample Descriptor")
+        self.assertEqual(str(descriptor), "Sample Descriptor")
+
+#views
+
+
+
