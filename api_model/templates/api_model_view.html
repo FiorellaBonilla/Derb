@@ -5,6 +5,7 @@
 {% block stylesheets %}
 <link href="{% static 'css/styleDragAndDrop.css' %}" rel="stylesheet">
 
+
 {% endblock stylesheets %}
 
 {% block content %}
@@ -17,7 +18,9 @@
     <form method="post" action="{% url 'render_principal' %}">
     {% csrf_token %}
     <input type="submit" value="View" class="custom-button view-button" id="view-button">
-    <button type="button" class="custom-button view-button" id="save-button">Guardar</button>
+    <button type="button" class="render_button " id="save-button">Save</button>
+        <button type="button" class="help-button render_button" id="help-button">Help</button>
+
 </form>
 
 </div>
@@ -37,7 +40,9 @@
 <script src="{% static 'vendors/tinymce/tinymce.min.js' %}"></script>
 <script src="{% static 'vendors/tinymce/jquery.tinymce.min.js' %}"></script>
 <script src="{% static 'vendors/tinymce/tinymce-all.js' %}"></script>
+<script src="{% static 'vendors/sweetalert2/sweetalert2.all.min.js' %}"></script>
 <script src="{% static 'js/script.js' %}"></script>
 <script src="{% static 'js/render_view.js' %}"></script>
+
 
 {% endblock %}

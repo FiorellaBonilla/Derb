@@ -47,3 +47,14 @@
     .related-value {
         flex: 1;
     }
+
+
+   .btn-view_render {
+    background-color: #your-color;
+    color: #your-text-color;
+    border: 1px solid #your-border-color;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}

@@ -39,13 +39,10 @@ class FormBuilder {
         })
         .then(response => {
             if (response.ok) {
-                console.log('Datos enviados con éxito a la API');
             } else {
-                console.error('Error al enviar los datos a la API');
             }
         })
         .catch(error => {
-            console.error('Error al enviar los datos a la API:', error);
         });
     }
 
@@ -155,10 +152,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (activeEditor) {
             const content = activeEditor.getContent();
-            // Envía el contenido al servidor con la función SendDataAPI
             formBuilder.SendDataAPI(activeEditor.modelId, content);
+            Swal.fire({
+                icon: 'success',
+                title: 'Saved information',
+                showConfirmButton: false,
+                timer: 1500
+            }).then(() => {
+                location.reload();
+            });
         } else {
-            console.error('No se encontró editor activo o contenido para guardar.');
+            console.error('No active editor or content to save found.');
         }
     });
+
+    const helpButton = document.getElementById('help-button');
+    helpButton.addEventListener('click', () => {
+        Swal.fire({
+            icon: 'info',
+            title: 'Help',
+            text: 'If you want to enter information you must do it in the following way: {{models.fields}} and click on the save button to store your answer. If you want to see it click on the view button',
+            showConfirmButton: true
+        });
+    });
 });
+
