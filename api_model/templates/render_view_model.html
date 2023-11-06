@@ -4,13 +4,19 @@
 {% block stylesheets %}
 
     <link href="{% static 'css/render_view.css' %}" rel="stylesheet">
+<link href="{% static 'css/stylesM.css' %}" rel="stylesheet">
+
 {% endblock stylesheets %}
 
 {% block content %}
     <div class="page-title">
         <h1 class="main-title">Result</h1>
     </div>
+<form method="post" action="{% url 'home' %}">
+        {% csrf_token %}
 
+    <button type="submit" class="custom-button view-button" id="view-button">Go to home</button>
+</form>
     <h2>Descriptor: {{ descriptor.name }}</h2>
     <p>Description: {{ descriptor.description }}</p>
 

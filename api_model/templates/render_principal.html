@@ -12,13 +12,11 @@
         <h1 class="main-title">Result</h1>
     </div>
 
-    <!-- Agrega un botón que redirige a otra vista -->
 <form method="post" action="{% url 'home' %}">
         {% csrf_token %}
 
     <button type="submit" class="custom-button view-button" id="view-button">Go to home</button>
 </form>
-
 
     {% if user.is_authenticated %}
         <div class="user-info">
