@@ -100,26 +100,6 @@ def form(request):
     return render(request, 'create_form_model.html',{'new_formModels': new_formModels})
 
 
-@login_required
-def render_name_fields(request):
-   # name_fields = ModelFields.objects.all()
-
-    return render(request, 'form_model.html')
-@login_required
-def render_view_model(request):
-    #name_fields = ModelFields.objects.all()
-
-    return render(request, 'render_view_model.html')
-
-@login_required
-def render_view_model(request):
-    content_from_tiny = tinyModel.objects.first()
-    response_content = ResponseForm.objects.filter(responseF=content_from_tiny.text).first()
-    context = {
-        'response_content': response_content,
-    }
-
-    return render(request, 'render_view_model.html', context)
 
 
 #combinados
