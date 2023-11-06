@@ -4,7 +4,7 @@ class FormBuilder {
         this.formPreview = document.getElementById('form-preview');
         this.tinyEditors = new Map();
         this.editor = null;
-        this.apiData = null; // Save data into api
+        this.apiData = null;
     }
 
     async fetchAPIData() {
@@ -23,6 +23,31 @@ class FormBuilder {
         event.dataTransfer.setData('text/plain', JSON.stringify(model));
         this.showTinyMCEEditor(model);
     }
+     SendDataAPI(modelId, content) {
+        const formData = {
+            modelId: modelId,
+            text: content
+        };
+
+        console.log(formData);
+        fetch('/api/tiny/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Datos enviados con éxito a la API');
+            } else {
+                console.error('Error al enviar los datos a la API');
+            }
+        })
+        .catch(error => {
+            console.error('Error al enviar los datos a la API:', error);
+        });
+    }
 
     showTinyMCEEditor(model) {
         if (!this.tinyEditors.has(model.id)) {
@@ -30,7 +55,7 @@ class FormBuilder {
             models.className = 'form-field';
             models.textContent = model.name;
             this.formPreview.appendChild(models);
-
+const self = this;
             tinymce.init({
                 target: models,
                 plugins: 'autolink lists media',
@@ -76,13 +101,8 @@ class FormBuilder {
                             });
 
                             editor.setContent(content);
-                                    saveContentToApi(content);
-                                    const savePopup = document.getElementById('save-popup');
-                                        savePopup.style.display = 'block';
 
-                            setTimeout(() => {
-                                     savePopup.style.display = 'none';
-                                        }, 3000);
+
 
                         }
                     });
@@ -93,6 +113,12 @@ class FormBuilder {
                 }
             });
         }
+    }
+
+    getActiveEditor() {
+            return this.tinyEditors.size > 0 ? [...this.tinyEditors.values()][0] : null;
+
+
     }
 
     async setupListeners() {
@@ -122,4 +148,17 @@ class FormBuilder {
 document.addEventListener('DOMContentLoaded', () => {
     const formBuilder = new FormBuilder();
     formBuilder.setupListeners();
+
+    const saveButton = document.getElementById('save-button');
+    saveButton.addEventListener('click', () => {
+        const activeEditor = formBuilder.getActiveEditor();
+
+        if (activeEditor) {
+            const content = activeEditor.getContent();
+            // Envía el contenido al servidor con la función SendDataAPI
+            formBuilder.SendDataAPI(activeEditor.modelId, content);
+        } else {
+            console.error('No se encontró editor activo o contenido para guardar.');
+        }
+    });
 });

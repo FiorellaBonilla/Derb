@@ -4,7 +4,6 @@
 <title>Drag and Drop Form Builder</title>
 {% block stylesheets %}
 <link href="{% static 'css/styleDragAndDrop.css' %}" rel="stylesheet">
-<link href="{% static 'css/alert_Save.css' %}" rel="stylesheet">
 
 {% endblock stylesheets %}
 
@@ -16,12 +15,11 @@
    <div class="form-preview" id="form-preview" droppable="true">
     <h2>Form</h2>
     <form method="post" action="{% url 'render_principal' %}">
-        {% csrf_token %}
-        <input type="submit" value="View" class="custom-button view-button" id="view-button">
-    </form>
-     <div id="save-popup" class="popup">
-    <span class="popup-content">Successfully saved content.</span>
-</div>
+    {% csrf_token %}
+    <input type="submit" value="View" class="custom-button view-button" id="view-button">
+    <button type="button" class="custom-button view-button" id="save-button">Guardar</button>
+</form>
+
 </div>
     <div class="sidebar" id="available-models">
         <h2>Available Models</h2>
