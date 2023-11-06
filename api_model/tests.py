@@ -8,8 +8,15 @@ from rest_framework.test import APIClient, APIRequestFactory, APITestCase
 from api_model.models import ModelTemplate, ModelFields, tinyModel, FormModel, ResponseForm, Person, Room, Pet, \
     Descriptor
 from api_model.serializers import ModelTemplateSerializer, ModelFieldsSerializer, tinySerializer, formModelSerializer, \
-    ResponseFormSerializer, CombinedModelSerializer
+    ResponseFormSerializer, CombinedModelSerializer, PersonSerializer, RoomSerializer, PetSerializer, \
+    CombinedDataSerializer
 from api_model.viewset import ModelFieldsViewset
+from django.test import TestCase
+from django.contrib.auth.models import User
+from .models import FormModel, tinyModel
+from django.urls import reverse
+
+from .views import replace_content_placeholders, get_model_instances
 
 
 # Create your tests here.
@@ -507,6 +514,336 @@ class DescriptorModelTest(TestCase):
         self.assertEqual(str(descriptor), "Sample Descriptor")
 
 #views
+#This test, called test_api_model_view_post,
+# is intended to verify the behavior of the api_model_view
+# when a POST request is made with valid and invalid data
+#Result:
+#setUp: OK
+#test_api_model_view_get: OK
 
+
+class ApiModelViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.client.login(username='testuser', password='testpassword')
+        self.form = FormModel.objects.create(title='Sample Form')
+
+    def test_api_model_view_get(self):
+        response = self.client.get(reverse('api_model_view', args=[self.form.id]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'api_model_view.html')
+
+    def test_api_model_view_post(self):
+        post_data = {
+            'text': 'Sample Text',
+        }
+
+        response = self.client.post(reverse('api_model_view', args=[self.form.id]), post_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(tinyModel.objects.count(), 1)
+        self.assertEqual(self.form.model_pre.count(), 1)
+
+    def test_api_model_view_post_invalid_data(self):
+        post_data = {}
+        response = self.client.post(reverse('api_model_view', args=[self.form.id]), post_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(tinyModel.objects.count(), 0)
+        self.assertEqual(self.form.model_pre.count(), 0)
+
+
+#This test verifies that the CombinedModelList view responds with a
+# 200 status code and returns a list of combined models with the expected data
+#test_combined_model_list:OK
+class CombinedModelListTest(APITestCase):
+    def test_combined_model_list(self):
+        # Realizar una solicitud GET a la vista
+        response = self.client.get(reverse('combined-model-list'))
+
+        # Comprobar que la respuesta tiene el código de estado HTTP 200 (éxito)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Comprobar el contenido de la respuesta (lista de modelos)
+        expected_data = [
+            {'name': 'Person'},
+            {'name': 'Room'},
+            {'name': 'Pet'},
+        ]
+
+        self.assertEqual(response.data, expected_data)
+
+
+#This test makes a GET request to the CombinedDataList view
+# and verifies that the response has an HTTP status code of 200.
+# It then compares the content of the response with the expected data,
+# which is the data structure provided in expected_data.
+#Result: OK
+class CombinedDataListTest(APITestCase):
+    def test_combined_data_list(self):
+        # Realizar una solicitud GET a la vista
+        response = self.client.get('/api/combined_data/')
+
+        # Comprobar que la respuesta tiene el código de estado HTTP 200 (éxito)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Comprobar el contenido de la respuesta (estructura de datos esperada)
+        expected_data = {
+            "models": {
+                "person": {
+                    "fields": {
+                        "first_name": "string",
+                        "last_name": "string",
+                        "id_number": "string"
+                    }
+                },
+                "room": {
+                    "fields": {
+                        "physical_address": "string",
+                        "color": "string",
+                        "occupants_count": "integer"
+                    }
+                },
+                "pet": {
+                    "fields": {
+                        "pet_type": "string",
+                        "color": "string",
+                        "age": "integer"
+                    }
+                }
+            }
+        }
+
+        self.assertEqual(response.data, expected_data)
+
+
+#test_descriptor_detail_view_with_existing_descriptor:
+# In this test, a test descriptor is created, and its ID is obtained.
+# A GET request is then made to the DescriptorDetailView with that ID.
+# The test verifies: If the response has an HTTP status code 200 (success),
+# it means that the view can be accessed successfully.
+
+
+#Result
+#setUp: OK
+#test_descriptor_detail_view_with_existing_descriptor: OK
+
+
+class DescriptorDetailViewTest(TestCase):
+    def setUp(self):
+        self.descriptor = Descriptor.objects.create(name="Test Descriptor")
+
+    def test_descriptor_detail_view_with_existing_descriptor(self):
+        descriptor_id = self.descriptor.id
+        response = self.client.get(reverse('descriptor-detail', args=[descriptor_id]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'render_view_model.html')
+        self.assertEqual(response.context['descriptor'], self.descriptor)
+
+
+#In these tests, you create test objects and use the replace_content_placeholders
+# and get_model_instances functions to verify that they work correctly.
+# A GET request is then made to the render_main view to verify that the
+# placeholders are replaced appropriately in the content.
+#Result:
+#test_render_principal: OK
+#test_replace_content_placeholders: OK
+#test_get_model_instances: Ok
+class RenderPrincipalTest(TestCase):
+    def test_render_principal(self):
+        # Crear objetos de prueba de tinyModel
+        tinyModel.objects.create(text='Hello {{Person.first_name}}!')
+        tinyModel.objects.create(text='The room color is {{Room.color}}.')
+        response = self.client.get(reverse('render_principal'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'render_principal.html')
+        content_from_tiny = response.context['content_from_tiny']
+        self.assertEqual(content_from_tiny[0].text, 'Hello John!')
+        self.assertEqual(content_from_tiny[1].text, 'The room color is Blue.')
+
+    def test_replace_content_placeholders(self):
+        content = 'Hello {{Person.first_name}}!'
+        Person = globals()['Person']
+        Person.objects.create(first_name='John')
+        new_content = replace_content_placeholders(content)
+        self.assertEqual(new_content, 'Hello John!')
+
+    def test_get_model_instances(self):
+        from api_model.models import Person
+        Person.objects.create(first_name='John')
+        Person.objects.create(first_name='Jane')
+        model_instances = get_model_instances('Person')
+        self.assertEqual(model_instances.count(), 2)
+        non_existent_model_instances = get_model_instances('NonExistentModel')
+        self.assertIsNone(non_existent_model_instances)
+
+
+
+#This test is responsible for verifying that the CombinedDataAPI
+# view works properly by retrieving data from the Person, Room,
+# and Pet models, and returning an HTTP 200 response with the appropriate data
+#Result:
+#test_combined_data_api: OK
+class CombinedDataAPITest(APITestCase):
+    def test_combined_data_api(self):
+        Person.objects.create(first_name='John', last_name='Doe', id_number='12345')
+        Room.objects.create(physical_address='123 Main St', color='Blue', occupants_count=2)
+        Pet.objects.create(pet_type='Dog', color='Brown', age=3)
+        response = self.client.get(reverse('CombinedDataAPI'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        combined_data = response.data
+        self.assertIn('persons', combined_data)
+        self.assertIn('room', combined_data)
+        self.assertIn('pet', combined_data)
+        self.assertEqual(len(combined_data['persons']), 1)
+        self.assertEqual(len(combined_data['room']), 1)
+        self.assertEqual(len(combined_data['pet']), 1)
+
+#Serializer
+#Test Serialization (test_serialization): In this test, you create an
+# instance of the serializer and provide it with sample data to serialize.
+# Then, it is checked if the serializer is capable of converting this data into
+# a serializable structure and if the result matches the expected data.
+#Deserialization Test (test_deserialization): In this test, serialized data
+# is given as input, and the serializer is responsible for deserializing it,
+# that is, converting it into a Python data structure. Then, it is checked if
+# the serializer can successfully deserialize the given data and if the result
+# matches the expected data.
+#Result:
+#test_serialization: OK
+#test_deserialization: OK
+class CombinedModelSerializerTest(APITestCase):
+    def test_serialization(self):
+        data = {'models': [{'name': 'Person'}, {'name': 'Room'}, {'name': 'Pet'}]}
+        serializer = CombinedModelSerializer(data=data)
+        self.assertTrue(serializer.is_valid())
+        serialized_data = serializer.data
+        expected_data = {'models': [{'name': 'Person'}, {'name': 'Room'}, {'name': 'Pet'}]}
+        self.assertEqual(serialized_data, expected_data)
+
+    def test_deserialization(self):
+        serialized_data = {'models': [{'name': 'Person'}, {'name': 'Room'}, {'name': 'Pet'}]}
+        serializer = CombinedModelSerializer(data=serialized_data)
+        self.assertTrue(serializer.is_valid())
+        deserialized_data = serializer.validated_data
+        expected_data = {'models': [{'name': 'Person'}, {'name': 'Room'}, {'name': 'Pet'}]}
+        self.assertEqual(deserialized_data, expected_data)
+
+#two tests are created: test_serialization and test_deserialization.
+# The first test verifies that the serializer is capable of serializing a
+# Person instance into an expected format. The second test verifies that
+# the serializer can deserialize data in a valid format and create or update a Person instance.
+#Result:
+#setUp: OK
+#test_serialization: OK
+#test_deserialization: OK
+class PersonSerializerTest(TestCase):
+    def setUp(self):
+        self.person = Person.objects.create(first_name='Juan', last_name='castro', id_number='12345')
+
+    def test_serialization(self):
+        serializer = PersonSerializer(instance=self.person)
+        expected_data = {
+            'id': self.person.id,
+            'first_name': 'Juan',
+            'last_name': 'castro',
+            'id_number': '12345',
+        }
+        self.assertEqual(serializer.data, expected_data)
+
+    def test_deserialization(self):
+        data = {
+            'first_name': 'Jane',
+            'last_name': 'bonilla',
+            'id_number': '67890',
+        }
+        serializer = PersonSerializer(data=data)
+        self.assertTrue(serializer.is_valid())
+        person = serializer.save()
+        self.assertEqual(person.first_name, 'Jane')
+        self.assertEqual(person.last_name, 'bonilla')
+        self.assertEqual(person.id_number, '67890')
+
+#Two tests are performed: test_serialization and test_deserialization.
+# The first test verifies that the serializer is capable of serializing a
+# Room instance into an expected format. The second test verifies that the
+# serializer can deserialize data in a valid format and create or update a Room instance.
+#Result:
+#setUp: OK
+#test_serialization:OK
+#test_deserialization:OK
+class RoomSerializerTest(TestCase):
+    def setUp(self):
+        # Crear una instancia de Room para usar en las pruebas
+        self.room = Room.objects.create(physical_address='Nicoya', color='Blue', occupants_count=2)
+
+    def test_serialization(self):
+        # Crear una instancia del serializador con la instancia de Room
+        serializer = RoomSerializer(instance=self.room)
+
+        # Verificar que los datos serializados sean correctos
+        expected_data = {
+            'id': self.room.id,
+            'physical_address': 'Nicoya',
+            'color': 'Blue',
+            'occupants_count': 2,
+        }
+        self.assertEqual(serializer.data, expected_data)
+
+    def test_deserialization(self):
+        # Datos de ejemplo que representan una habitación
+        data = {
+            'physical_address': 'santa cruz',
+            'color': 'Green',
+            'occupants_count': 3,
+        }
+
+        # Crear una instancia del serializador con los datos de ejemplo
+        serializer = RoomSerializer(data=data)
+
+        # Verificar si los datos son válidos y se pueden deserializar
+        self.assertTrue(serializer.is_valid())
+
+        # Crear o actualizar una instancia de Room a partir de los datos
+        room = serializer.save()
+
+        # Verificar que la instancia de Room se ha creado o actualizado correctamente
+        self.assertEqual(room.physical_address, 'santa cruz')
+        self.assertEqual(room.color, 'Green')
+        self.assertEqual(room.occupants_count, 3)
+
+
+#Two tests are performed: test_serialization and test_deserialization.
+# The first test verifies that the serializer is capable of serializing
+# a Pet instance into an expected format. The second test verifies that
+# the serializer can deserialize data in a valid format and create or update a Pet instance.
+#Result:
+#setUp: OK
+#test_serialization: OK
+#test_deserialization: OK
+class PetSerializerTest(TestCase):
+    def setUp(self):
+        self.pet = Pet.objects.create(pet_type='Dog', color='Brown', age=3)
+
+    def test_serialization(self):
+        serializer = PetSerializer(instance=self.pet)
+        expected_data = {
+            'id': self.pet.id,
+            'pet_type': 'Dog',
+            'color': 'Brown',
+            'age': 3,
+        }
+        self.assertEqual(serializer.data, expected_data)
+
+    def test_deserialization(self):
+        data = {
+            'pet_type': 'Cat',
+            'color': 'Gray',
+            'age': 2,
+        }
+        serializer = PetSerializer(data=data)
+        self.assertTrue(serializer.is_valid())
+        pet = serializer.save()
+        self.assertEqual(pet.pet_type, 'Cat')
+        self.assertEqual(pet.color, 'Gray')
+        self.assertEqual(pet.age, 2)
 
 
