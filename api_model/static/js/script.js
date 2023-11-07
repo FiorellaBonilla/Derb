@@ -29,7 +29,6 @@ class FormBuilder {
             text: content
         };
 
-        console.log(formData);
         fetch('/api/tiny/', {
             method: 'POST',
             headers: {
@@ -46,71 +45,74 @@ class FormBuilder {
         });
     }
 
-    showTinyMCEEditor(model) {
-        if (!this.tinyEditors.has(model.id)) {
-            const models = document.createElement('div');
-            models.className = 'form-field';
-            models.textContent = model.name;
-            this.formPreview.appendChild(models);
-const self = this;
-            tinymce.init({
-                target: models,
-                plugins: 'autolink lists media',
-                toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | table | media | link',
-                setup: (editor) => {
-                    editor.on('init', () => {
-                        editor.setContent('');
-                    });
+  showTinyMCEEditor(model) {
+    if (!this.tinyEditors.has(model.id)) {
+        const models = document.createElement('div');
+        models.className = 'form-field';
+        models.textContent = model.name;
+        this.formPreview.appendChild(models);
+        const self = this;
 
-                    editor.on('input', async (e) => {
-                        let content = editor.getContent();
+        tinymce.init({
+            target: models,
+            plugins: 'autolink lists media',
+            toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | table | media | link',
+            setup: (editor) => {
+                editor.on('init', () => {
+                    editor.setContent('');
+                });
 
-                        // Find all matches of {{...}}
-                        const variableMatches = content.match(/\{\{([\w.]+)\}\}/g);
+                editor.on('input', async (e) => {
+                    let content = editor.getContent();
 
-                        if (variableMatches) {
-                            variableMatches.forEach((variable) => {
-                                const cleanVariable = variable.match(/\{\{([\w.]+)\}\}/)[1];
-                                const [modelPartial, fieldPartial] = cleanVariable.split('.');
+                    // Find all matches of {{...}}
+                    const variableMatches = content.match(/\{\{([\w.]+)\}\}/g);
 
-                                if (this.apiData) {
-                                    const matchingModels = Object.keys(this.apiData.models).filter(modelName =>
-                                        modelName.startsWith(modelPartial)
+                    if (variableMatches) {
+                        variableMatches.forEach((variable) => {
+                            const cleanVariable = variable.match(/\{\{([\w.]+)\}\}/)[1];
+                            const [modelPartial, fieldPartial] = cleanVariable.split('.');
+
+                            if (this.apiData) {
+                                const matchingModels = Object.keys(this.apiData.models).filter(modelName =>
+                                    modelName.startsWith(modelPartial)
+                                );
+
+                                const currentModel = this.apiData.models[modelPartial];
+                                let matchingFields = [];
+
+                                if (currentModel) {
+                                    matchingFields = Object.keys(currentModel.fields).filter(fieldName =>
+                                        fieldName.startsWith(fieldPartial)
                                     );
-
-                                    const currentModel = this.apiData.models[modelPartial];
-                                    let matchingFields = [];
-
-                                    if (currentModel) {
-                                        matchingFields = Object.keys(currentModel.fields).filter(fieldName =>
-                                            fieldName.startsWith(fieldPartial)
-                                        );
-                                    }
-
-                                    if (matchingModels.length > 0 && matchingFields.length > 0) {
-                                        const suggestion = `{{${matchingModels[0]}.${matchingFields[0]}}}`;
-                                        content = content.replace(variable, suggestion);
-                                    } else if (matchingModels.length > 0) {
-                                        const suggestion = `{{${matchingModels[0]}`;
-                                        content = content.replace(variable, suggestion);
-                                    }
                                 }
-                            });
 
-                            editor.setContent(content);
+                                if (matchingModels.length > 0 && matchingFields.length > 0) {
+                                    const suggestion = `{{${matchingModels[0]}.${matchingFields[0]}}}`;
+                                    content = content.replace(variable, suggestion);
+                                } else if (matchingModels.length > 0) {
+                                    const suggestion = `{{${matchingModels[0]}`;
+                                    content = content.replace(variable, suggestion);
+                                }
+                            }
+                        });
 
+                        const selection = editor.selection.getBookmark(2);
+                        editor.setContent(content, { format: 'raw' });
+                        editor.selection.moveToBookmark(selection);
+                    }
+                });
 
+                editor.settings.forced_root_block = '';
 
-                        }
-                    });
-
-                    editor.settings.forced_root_block = '';
-
-                    this.tinyEditors.set(model.id, editor);
-                }
-            });
-        }
+                this.tinyEditors.set(model.id, editor);
+            }
+        });
     }
+}
+
+
+
 
     getActiveEditor() {
             return this.tinyEditors.size > 0 ? [...this.tinyEditors.values()][0] : null;
