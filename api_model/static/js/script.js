@@ -25,7 +25,6 @@ class FormBuilder {
     }
         async SendDataAPI(modelId, content) {
         try {
-            // Hacer la solicitud POST para guardar el objeto tiny y obtener el ID
             const responseTiny = await fetch('/api/tiny/', {
                 method: 'POST',
                 headers: {
@@ -38,35 +37,29 @@ class FormBuilder {
             });
 
             if (!responseTiny.ok) {
-                throw new Error('Error al guardar el objeto tiny');
+                throw new Error('Error saving tiny object');
             }
 
-            // Obtener el ID del objeto tiny desde la respuesta
             const tinyResponseData = await responseTiny.json();
             const tinyId = tinyResponseData.id;
-
-            // Obtener formId de alguna manera (puedes ajustar esto según tu lógica)
             const urlParts = window.location.pathname.split('/');
             const formId = urlParts[urlParts.length - 2];
-
-            // Hacer la solicitud PUT a la API de form para actualizar solo model_pre
             const responseForm = await fetch(`/api/form/${formId}/`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    model_pre: [tinyId]  // Incluir solo el campo model_pre
+                    model_pre: [tinyId]
                 })
             });
 
             if (!responseForm.ok) {
-                throw new Error('Error al actualizar datos en la API FormModel');
+                throw new Error('Error updating data in FormModel API');
             }
 
-            console.log('Datos actualizados correctamente en la API FormModel');
         } catch (error) {
-            console.error('Error al procesar el formulario:', error);
+            console.error('Error processing form:', error);
         }
     }
 
