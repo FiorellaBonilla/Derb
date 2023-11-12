@@ -15,7 +15,7 @@
     </div>
    <div class="form-preview" id="form-preview" droppable="true">
     <h2>Form</h2>
-    <form method="post" action="{% url 'render_principal' %}">
+<form method="post" data-form-id="{{ form.id }}" action="{% url 'render_principal' form_id=form.id %}">
     {% csrf_token %}
     <input type="submit" value="View" class="custom-button view-button" id="view-button">
     <button type="button" class="render_button " id="save-button">Save</button>

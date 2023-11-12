@@ -23,27 +23,54 @@ class FormBuilder {
         event.dataTransfer.setData('text/plain', JSON.stringify(model));
         this.showTinyMCEEditor(model);
     }
-     SendDataAPI(modelId, content) {
-        const formData = {
-            modelId: modelId,
-            text: content
-        };
+        async SendDataAPI(modelId, content) {
+        try {
+            // Hacer la solicitud POST para guardar el objeto tiny y obtener el ID
+            const responseTiny = await fetch('/api/tiny/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    modelId: modelId,
+                    text: content
+                })
+            });
 
-        fetch('/api/tiny/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        })
-        .then(response => {
-            if (response.ok) {
-            } else {
+            if (!responseTiny.ok) {
+                throw new Error('Error al guardar el objeto tiny');
             }
-        })
-        .catch(error => {
-        });
+
+            // Obtener el ID del objeto tiny desde la respuesta
+            const tinyResponseData = await responseTiny.json();
+            const tinyId = tinyResponseData.id;
+
+            // Obtener formId de alguna manera (puedes ajustar esto según tu lógica)
+            const urlParts = window.location.pathname.split('/');
+            const formId = urlParts[urlParts.length - 2];
+
+            // Hacer la solicitud PUT a la API de form para actualizar solo model_pre
+            const responseForm = await fetch(`/api/form/${formId}/`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    model_pre: [tinyId]  // Incluir solo el campo model_pre
+                })
+            });
+
+            if (!responseForm.ok) {
+                throw new Error('Error al actualizar datos en la API FormModel');
+            }
+
+            console.log('Datos actualizados correctamente en la API FormModel');
+        } catch (error) {
+            console.error('Error al procesar el formulario:', error);
+        }
     }
+
+
 
   showTinyMCEEditor(model) {
     if (!this.tinyEditors.has(model.id)) {
@@ -155,14 +182,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (activeEditor) {
             const content = activeEditor.getContent();
             formBuilder.SendDataAPI(activeEditor.modelId, content);
-            Swal.fire({
-                icon: 'success',
-                title: 'Saved information',
-                showConfirmButton: false,
-                timer: 1500
-            }).then(() => {
-                location.reload();
-            });
+            //Swal.fire({
+                //icon: 'success',
+                //title: 'Saved information',
+                //showConfirmButton: false,
+                //timer: 1500
+           // }).then(() => {
+             //   location.reload();
+            //});
         } else {
             console.error('No active editor or content to save found.');
         }
