@@ -17,7 +17,6 @@
     <h2>Form</h2>
 <form method="post" data-form-id="{{ form.id }}" action="{% if tiny %}{% url 'render_principal' form_id=form.id tiny_id=tiny.id %}{% endif %}">
     {% csrf_token %}
-    <input type="submit" value="View" class="custom-button view-button" id="view-button">
     <button type="button" class="render_button " id="save-button">Save</button>
     <button type="button" class="help-button render_button" id="help-button">Help</button>
 </form>
