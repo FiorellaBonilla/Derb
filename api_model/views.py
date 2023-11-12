@@ -165,8 +165,8 @@ class DescriptorDetailView(DetailView):
     context_object_name = 'descriptor'
 
 
-def render_principal(request, form_id):
-    content_from_tiny = tinyModel.objects.filter(formmodel=form_id)
+def render_principal(request, form_id, tiny_id):
+    content_from_tiny = tinyModel.objects.filter(formmodel=form_id, id=tiny_id)
 
     # Replace the tags {{model.field}}
     for item in content_from_tiny:
@@ -174,7 +174,8 @@ def render_principal(request, form_id):
 
     context = {
         'content_from_tiny': content_from_tiny,
-        'form_id': form_id,  # Agrega el form_id al contexto
+        'form_id': form_id,
+        'tiny_id': tiny_id,
     }
 
     return render(request, 'render_principal.html', context)

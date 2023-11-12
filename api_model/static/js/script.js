@@ -182,14 +182,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (activeEditor) {
             const content = activeEditor.getContent();
             formBuilder.SendDataAPI(activeEditor.modelId, content);
-            //Swal.fire({
-                //icon: 'success',
-                //title: 'Saved information',
-                //showConfirmButton: false,
-                //timer: 1500
-           // }).then(() => {
-             //   location.reload();
-            //});
+            Swal.fire({
+                icon: 'success',
+                title: 'Saved information',
+                showConfirmButton: false,
+                timer: 1500
+            }).then(() => {
+                location.reload();
+            });
         } else {
             console.error('No active editor or content to save found.');
         }
