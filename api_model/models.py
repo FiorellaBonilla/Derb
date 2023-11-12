@@ -17,23 +17,22 @@ class ModelFields(models.Model):
         return self.nameFields
 
 
+
+
 class tinyModel(models.Model):
     text = models.TextField(blank=True, null=True)
 
     def __str__(self):
 
         return self.text
-
-
 class FormModel(models.Model):
     title = models.CharField(max_length=200)
     description_model = models.TextField(blank=True, null=True)
-    model_pre = models.ManyToManyField(ModelTemplate)
+    model_pre = models.ManyToManyField(tinyModel)
 
     def __str__(self):
 
         return self.title
-
 
 class ResponseForm(models.Model):
     responseF = models.TextField(blank=True, null=True)

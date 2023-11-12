@@ -21,7 +21,7 @@ class tinySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class formModelSerializer(serializers.ModelSerializer):
-
+    title = serializers.CharField(required=False);
     class Meta:
         model = FormModel
         fields = '__all__'
